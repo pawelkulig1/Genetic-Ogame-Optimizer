@@ -1,1 +1,1 @@
-# Ogame-Genetic-Optimizer
+# Genetic-Ogame-Optimizer
