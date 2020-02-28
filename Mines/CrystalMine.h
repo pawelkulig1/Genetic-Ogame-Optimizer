@@ -16,7 +16,8 @@ public:
                 const Resources &defaultProductionPerHour = Resources(0, 20, 0, 0),
                 double productionRatio = 20,
                 double energyRatio = 10);
-};
 
+	const Resources getProductionPerHour() const override;
+};
 
 #endif //OGAME_CRYSTALMINE_H

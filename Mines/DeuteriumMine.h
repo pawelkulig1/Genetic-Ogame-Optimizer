@@ -9,14 +9,17 @@
 #include "Mine.h"
 
 class DeuteriumMine : public Mine {
+	int planet_temperature;
 public:
-    DeuteriumMine(const Resources &defaultCost = Resources(225, 75, 0, 0),
+    DeuteriumMine(int planet_temperature = 25,
+				  const Resources &defaultCost = Resources(225, 75, 0, 0),
                   const double costRatio = 1.5,
                   const Resources &defaultProductionPerHour = Resources(0, 0, 0, 0),
+				  
                   double productionRatio = 10,
                   double energyRatio = 20);
 
-    Resources getProductionPerHour() override;
+    const Resources getProductionPerHour() const override;
 };
 
 

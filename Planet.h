@@ -10,6 +10,7 @@
 #include "SolarPlant.h"
 #include "Mines/CrystalMine.h"
 #include "Mines/MetalMine.h"
+#include "common_includes.h"
 
 class Planet {
 private:
@@ -17,19 +18,36 @@ private:
     CrystalMine crystalMine;
     DeuteriumMine deuteriumMine;
     SolarPlant solarPlant;
+	Structure *structure_list[globals::Upgradables::SIZE];
+
     Resources resources;
+	const int planet_temperature = 25;
+	int robot_factory_level = 0;
+	int nanite_factory_level = 0;
+	
+	//Production factor is based on avaliable energy on planet
     double productionFactor;
+
+	void construct_structure_list();
 
 public:
     Planet();
 
-    void passTime(double);
+	Structure *get_structure(int index)
+	{
+		if (index < globals::Upgradables::SIZE)
+			return structure_list[index];
+		else
+			throw(std::runtime_error("Planet::get_structure incorrect index!"));
+	}
 
-    bool upgradeBuilding(Building &building);
+    void passTime(int);
+
+	bool upgrade_structure(int structure_index);
 
     Resources getPlanetExtraction();
 
-    double getTimeToBuild(Building const &b);
+	double getTimeToBuild(int structure_index);
 
     int calculatePlanetEnergy();
 
@@ -44,6 +62,12 @@ public:
     Resources &getResources();
 
     double getProductionFactor() const;
+
+	int get_nanite_factory_level() const;
+
+	int get_robot_factory_level() const;
+
+	int get_planet_temperature() const;
 };
 
 

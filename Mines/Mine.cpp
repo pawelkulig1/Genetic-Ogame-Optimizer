@@ -5,9 +5,9 @@
 #include <cmath>
 #include "Mine.h"
 
-Resources Mine::getProductionPerHour() {
-    return Resources(productionRatio * lvl * pow(1.1, lvl), 0, 0, 0);
-}
+//Resources Mine::getProductionPerHour() {
+//    return Resources(productionRatio * lvl * pow(1.1, lvl), 0, 0, 0);
+//}
 
 Resources Mine::getEnergyConsumption() {
     return Resources(0, 0, 0, energyRatio * lvl * pow(1.1, lvl));

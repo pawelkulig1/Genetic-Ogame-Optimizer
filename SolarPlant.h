@@ -12,8 +12,8 @@ class SolarPlant : public Building {
 private:
     int productionRatio;
 public:
-    SolarPlant(const Resources &defaultCost = Resources(75, 30, 0, 0),
-               const double costRatio = 1.5, int productionRatio = 20);
+    SolarPlant(Resources defaultCost = Resources(75, 30, 0, 0),
+               double costRatio = 1.5, int productionRatio = 20);
 
     Resources getProductionPerHour();
 };

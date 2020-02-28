@@ -9,7 +9,7 @@ Resources SolarPlant::getProductionPerHour() {
     return Resources(0, 0, 0, productionRatio * lvl * pow(1.1, lvl));
 }
 
-SolarPlant::SolarPlant(const Resources &defaultCost, const double costRatio, int productionRatio) : Building(
+SolarPlant::SolarPlant(Resources defaultCost, double costRatio, int productionRatio) : Building(
         defaultCost, costRatio), productionRatio(productionRatio) {
     lvl = 0;
     name = "Solar Plant";

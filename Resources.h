@@ -10,51 +10,58 @@
 #pragma once
 
 class Resources {
-    double metal;
-    double crystal;
-    double deuterium;
-    double energy;
 public:
-    double getEnergy() const;
-
-    void setEnergy(double energy);
+	using data_type = double;
+private:
+    data_type metal;
+    data_type crystal;
+    data_type deuterium;
+    data_type energy;
 
 public:
+    Resources::data_type getEnergy() const;
+
+    void setEnergy(data_type energy);
+
     Resources();
 
-    Resources(double, double);
+    Resources(data_type, data_type);
 
-    Resources(double, double, double);
+    Resources(data_type, data_type, data_type);
 
-    Resources(double, double, double, double);
+    Resources(data_type, data_type, data_type, data_type);
 
-    double getMetal(void);
+    data_type getMetal(void);
 
-    double getCrystal(void);
+    data_type getCrystal(void);
 
-    double getDeuterium();
+    data_type getDeuterium();
 
-    double at(int n);
+    data_type at(int n);
 
-    void setMetal(double);
+    void setMetal(data_type);
 
-    void setCrystal(double);
+    void setCrystal(data_type);
 
-    void setDeuterium(double);
+    void setDeuterium(data_type);
 
     Resources operator+(Resources);
 
     Resources operator-(Resources);
 
-    Resources operator*(double);
+    Resources operator*(data_type);
 
-    Resources operator^(double);
+    Resources operator^(data_type);
 
-    Resources operator/(double);
+    Resources operator/(data_type);
 
-    Resources operator*(double) const;
+    Resources operator*(data_type) const;
 
     bool operator>=(Resources);
+
+	bool operator>(Resources);
+
+	bool operator>(data_type required);
 
     friend std::ostream &operator<<(std::ostream &stream, const Resources &resources);
 };

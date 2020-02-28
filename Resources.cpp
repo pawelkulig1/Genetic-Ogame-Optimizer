@@ -7,30 +7,30 @@
 #include <math.h>
 #include <sstream>
 
-Resources::Resources(double metal, double crystal, double deuterium) :
+Resources::Resources(data_type metal, data_type crystal, data_type deuterium) :
         metal(metal), crystal(crystal), deuterium(deuterium) {}
 
 Resources::Resources() : metal(0), crystal(0), deuterium(0) {}
 
-Resources::Resources(double metal, double crystal) : metal(metal), crystal(crystal) {}
+Resources::Resources(data_type metal, data_type crystal) : metal(metal), crystal(crystal) {}
 
-Resources::Resources(double metal, double crystal, double deuterium, double energy) :
+Resources::Resources(data_type metal, data_type crystal, data_type deuterium, data_type energy) :
         metal(metal), crystal(crystal), deuterium(deuterium), energy(energy) {}
 
 
-double Resources::getMetal(void) {
+Resources::data_type Resources::getMetal(void) {
     return metal;
 }
 
-double Resources::getCrystal(void) {
+Resources::data_type Resources::getCrystal(void) {
     return crystal;
 }
 
-double Resources::getDeuterium() {
+Resources::data_type Resources::getDeuterium() {
     return deuterium;
 }
 
-double Resources::at(int n) {
+Resources::data_type Resources::at(int n) {
     if (n > 3 || n < 0)
         throw (std::string("Index out of bound!"));
 
@@ -44,17 +44,19 @@ double Resources::at(int n) {
         case 3:
             return energy;
     }
+	//throw
+	return -1;
 }
 
-void Resources::setMetal(double metal) {
+void Resources::setMetal(data_type metal) {
     this->metal = metal;
 }
 
-void Resources::setCrystal(double crystal) {
+void Resources::setCrystal(data_type crystal) {
     this->crystal = crystal;
 }
 
-void Resources::setDeuterium(double deuterium) {
+void Resources::setDeuterium(data_type deuterium) {
     this->deuterium = deuterium;
 }
 
@@ -76,15 +78,15 @@ Resources Resources::operator-(Resources recv) {
     return temp;
 }
 
-double Resources::getEnergy() const {
+Resources::data_type Resources::getEnergy() const {
     return energy;
 }
 
-void Resources::setEnergy(double energy) {
+void Resources::setEnergy(data_type energy) {
     Resources::energy = energy;
 }
 
-Resources Resources::operator*(double mult) {
+Resources Resources::operator*(data_type mult) {
     Resources temp;
     temp.setMetal(metal * mult);
     temp.setCrystal(crystal * mult);
@@ -93,7 +95,7 @@ Resources Resources::operator*(double mult) {
     return temp;
 }
 
-Resources Resources::operator^(double exponent) {
+Resources Resources::operator^(data_type exponent) {
     Resources temp;
     temp.setMetal(pow(metal, exponent));
     temp.setCrystal(pow(crystal, exponent));
@@ -106,6 +108,19 @@ bool Resources::operator>=(Resources required) {
     return (metal >= required.metal &&
             crystal >= required.crystal &&
             deuterium >= required.deuterium);
+}
+
+bool Resources::operator>(Resources required) {
+	return (metal > required.metal &&
+			crystal > required.crystal &&
+			deuterium > required.deuterium);
+}
+
+bool Resources::operator>(data_type required)
+{
+	return (metal > required &&
+			crystal > required &&
+			deuterium > required);
 }
 
 std::ostream &operator<<(std::ostream &out, const Resources &resources) {
@@ -130,7 +145,7 @@ std::ostream &operator<<(std::ostream &out, const Resources &resources) {
     return out;
 }
 
-Resources Resources::operator/(double divider) {
+Resources Resources::operator/(data_type divider) {
     return Resources(
             metal / divider,
             crystal / divider,
@@ -139,7 +154,7 @@ Resources Resources::operator/(double divider) {
     );
 }
 
-Resources Resources::operator*(double mult) const {
+Resources Resources::operator*(data_type mult) const {
     Resources temp;
     temp.setMetal(metal * mult);
     temp.setCrystal(crystal * mult);

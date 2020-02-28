@@ -6,43 +6,13 @@
 #define OGAME_BUILDING_H
 
 
-#include "Resources.h"
+#include "structure.h"
 
-#define planetTemperature 25
-#define PoziomFabrRobot 0
-#define PoziomFabNanit 0
 
-class Building {
-protected:
-    int lvl;
-    const Resources defaultCost;
-    const double costRatio;
-    double constructionTimeSec;
-    std::string name;
+class Building : public Structure{
 public:
-    const std::string &getName() const;
-
-    void setName(const std::string &name);
-
-public:
-
-    Building(const Resources &defaultCost, const double costRatio = 2);
-
-    virtual Resources getNextLevelCost() const;
-
-    virtual int getLvl() const;
-
-    virtual const Resources &getDefaultCost() const;
-
-    virtual const double getCostRatio() const;
-
-    virtual void setLvl(int lvl);
-
-    virtual void operator++();
-
-    double getConstructionTime();
-
-    friend std::ostream &operator<<(std::ostream &out, const Building &b);
+	virtual ~Building();
+    Building(Resources default_cost, double cost_ratio = 2);
 };
 
 

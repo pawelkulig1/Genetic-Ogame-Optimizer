@@ -3,6 +3,7 @@
 //
 
 #include "CrystalMine.h"
+#include <math.h>
 
 CrystalMine::CrystalMine(const Resources &defaultCost, const double costRatio,
                          const Resources &defaultProductionPerHour, double productionRatio, double energyRatio) : Mine(
@@ -11,5 +12,9 @@ CrystalMine::CrystalMine(const Resources &defaultCost, const double costRatio,
     name = "Crystal Mine";
 }
 
+const Resources CrystalMine::getProductionPerHour() const
+{
+	return Resources(0, productionRatio * lvl * pow(1.1, lvl), 0, 0);
+}
 
 

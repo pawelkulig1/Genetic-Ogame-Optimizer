@@ -14,7 +14,7 @@ protected:
 
     Resources defaultProductionPerHour;
 public:
-    const Resources &getDefaultProductionPerHour() const;
+    virtual const Resources &getDefaultProductionPerHour() const;
 
 protected:
     double productionRatio;
@@ -23,7 +23,7 @@ public:
     Mine(const Resources &defaultCost, const double costRatio, const Resources &defaultProductionPerHour,
          double productionRatio, double energyRatio);
 
-    virtual Resources getProductionPerHour();
+    virtual const Resources getProductionPerHour() const = 0;
 
     virtual Resources getEnergyConsumption();
 
