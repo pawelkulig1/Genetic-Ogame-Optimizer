@@ -13,14 +13,14 @@ class Resources {
 public:
 	using data_type = double;
 private:
-    data_type metal;
-    data_type crystal;
-    data_type deuterium;
-    data_type energy;
+    data_type metal = 0;
+    data_type crystal = 0;
+    data_type deuterium = 0;
+    data_type energy = 0;
 
 public:
     Resources::data_type getEnergy() const;
-
+	
     void setEnergy(data_type energy);
 
     Resources();

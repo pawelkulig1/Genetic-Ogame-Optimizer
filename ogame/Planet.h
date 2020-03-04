@@ -33,13 +33,7 @@ private:
 public:
     Planet();
 
-	Structure *get_structure(int index)
-	{
-		if (index < globals::Upgradables::SIZE)
-			return structure_list[index];
-		else
-			throw(std::runtime_error("Planet::get_structure incorrect index!"));
-	}
+	Structure *get_structure(int index);
 
     void passTime(int);
 

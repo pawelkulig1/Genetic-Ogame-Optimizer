@@ -18,6 +18,15 @@ Planet::Planet() : metalMine(MetalMine()),
 	construct_structure_list();
 }
 
+Structure *Planet::get_structure(int index)
+{
+	if (index < globals::Upgradables::SIZE)
+		return structure_list[index];
+	else
+		throw(std::runtime_error("Planet::get_structure incorrect index!"));
+}
+
+
 void Planet::construct_structure_list()
 {
 	structure_list[0] = &metalMine;
@@ -85,7 +94,6 @@ double Planet::getProductionFactor() const {
 double Planet::getTimeToBuild(int structure_index)
 {
 	Structure *structure = get_structure(structure_index);
-    double maxDiff = 0;
     Resources cost_delta;
     Resources extraction = getPlanetExtraction();
     cost_delta = resources - structure->getNextLevelCost();

@@ -13,12 +13,12 @@
 class Simulation {
 private:
     double time;
-    std::vector<Building> queue;
-    Planet planet;
+    std::vector<globals::Upgradables> m_queue;
+    Planet m_planet;
 public:
     Simulation();
-
-    void run();
+	void set_queue(std::vector<globals::Upgradables> &queue) {m_queue = queue;}
+    double run();
 };
 
 

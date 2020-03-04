@@ -17,7 +17,6 @@ Resources::Resources(data_type metal, data_type crystal) : metal(metal), crystal
 Resources::Resources(data_type metal, data_type crystal, data_type deuterium, data_type energy) :
         metal(metal), crystal(crystal), deuterium(deuterium), energy(energy) {}
 
-
 Resources::data_type Resources::getMetal(void) {
     return metal;
 }
@@ -91,7 +90,7 @@ Resources Resources::operator*(data_type mult) {
     temp.setMetal(metal * mult);
     temp.setCrystal(crystal * mult);
     temp.setDeuterium(deuterium * mult);
-    //temp.setEnergy(energy * mult);
+    temp.setEnergy(energy * mult);
     return temp;
 }
 

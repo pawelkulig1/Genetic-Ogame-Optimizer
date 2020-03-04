@@ -7,7 +7,6 @@ protected:
 	int lvl;
 	const Resources defaultCost;
 	const double costRatio;
-	//double constructionTimeSec;
 	std::string name;
 public:
 	virtual ~Structure();

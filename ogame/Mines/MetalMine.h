@@ -10,7 +10,7 @@
 
 class MetalMine : public Mine {
 public:
-    MetalMine(const Resources &defaultCost = Resources(60, 15, 0, 0),
+    MetalMine(const Resources &defaultCost = Resources(60, 15, 0, 0.0),
               const double costRatio = 1.5,
               const Resources &defaultProductionPerHour = Resources(30, 0, 0, 0),
               const int productionRatio = 30,
