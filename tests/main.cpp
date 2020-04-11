@@ -14,8 +14,4 @@ int main()
 	test_mines_cost();
 	test_upgrade_time();
 	test_basic_crossover();
-	test_generate_random_chromosome();
-
-	
-
 }

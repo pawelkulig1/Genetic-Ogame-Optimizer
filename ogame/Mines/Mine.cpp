@@ -2,7 +2,7 @@
 // Created by Paweł Kulig on 2019-01-12.
 //
 
-#include <cmath>
+#include <math.h>
 #include "Mine.h"
 
 Resources Mine::getEnergyConsumption() const {

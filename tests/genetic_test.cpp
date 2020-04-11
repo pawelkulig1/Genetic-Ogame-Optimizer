@@ -25,13 +25,3 @@ bool test_basic_crossover()
 	return true;
 }
 
-bool test_generate_random_chromosome()
-{
-	Utility util = Utility();
-	Chromosome temp = util.generate_initial_population(20);
-	for(int i=0;i<temp.size();i++)
-	{
-		std::cout << temp.get(i) << " ";
-	}
-	std::cout<<std::endl;
-}

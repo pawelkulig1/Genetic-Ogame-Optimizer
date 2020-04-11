@@ -68,7 +68,8 @@ void Utility::print_copy()
 {
 	for (int i=0;i<m_chromosomes_copy.size();++i)
 	{
-		std::cout<<m_chromosomes_copy[i].first << " " << m_chromosomes_copy[i].second << " " << (1 / m_chromosomes_copy[i].second) / 3600 << "\n";
+		std::cout<<m_chromosomes_copy[i].first << " " << m_chromosomes_copy[i].second << " " << (1 / m_chromosomes_copy[i].second) / 3600 << 
+			" " << (1 / m_chromosomes_copy[i].second) / 3600 / 24<<"\n";
 	}
 
 }

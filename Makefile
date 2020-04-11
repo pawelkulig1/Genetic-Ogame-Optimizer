@@ -3,8 +3,10 @@ O_FILES= ogame/Building.o \
 		 ogame/Resources.o \
 		 ogame/Simulation.o \
 		 ogame/Buildings/SolarPlant.o \
+		 ogame/Buildings/FusionPlant.o \
 		 ogame/Buildings/Laboratory.o \
 		 ogame/Buildings/RobotFactory.o \
+		 ogame/Buildings/Shipyard.o \
 		 ogame/Mines/CrystalMine.o \
 		 ogame/Mines/DeuteriumMine.o \
 		 ogame/Mines/MetalMine.o \

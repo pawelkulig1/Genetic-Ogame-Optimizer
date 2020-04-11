@@ -9,7 +9,7 @@
 #include "Mine.h"
 
 class DeuteriumMine : public Mine {
-	int planet_temperature;
+	int m_planet_temperature;
 public:
     DeuteriumMine(int planet_temperature = 25,
 				  const Resources &defaultCost = Resources(225, 75, 0, 0),

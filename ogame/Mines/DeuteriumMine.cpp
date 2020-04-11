@@ -5,11 +5,6 @@
 #include <math.h>
 #include "DeuteriumMine.h"
 
-
-//Resources DeuteriumMine::getProductionPerHour() {
-//    return Resources(0, 0, productionRatio * lvl * pow(1.1, lvl) * (1.44 - 0.004 * planet_temperature), 0);
-//}
-
 DeuteriumMine::DeuteriumMine(int planet_temperature,
 		const Resources &defaultCost, 
 		const double costRatio,
@@ -18,9 +13,10 @@ DeuteriumMine::DeuteriumMine(int planet_temperature,
 		double energyRatio)
         : Mine(defaultCost, costRatio, defaultProductionPerHour, productionRatio, energyRatio) {
     name = "Deuterium Mine";
+	m_planet_temperature = planet_temperature;
 }
 
 const Resources DeuteriumMine::getProductionPerHour() const
 {
-	return Resources(0, 0, 10 * lvl * pow(1.1, lvl ) * ( 1.44 - 0.004 * planet_temperature), 0);
+	return Resources(0, 0, 10 * lvl * pow(1.1, lvl ) * ( 1.44 - 0.004 * m_planet_temperature), 0);
 }

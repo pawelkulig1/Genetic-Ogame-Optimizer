@@ -17,19 +17,19 @@ Resources::Resources(data_type metal, data_type crystal) : metal(metal), crystal
 Resources::Resources(data_type metal, data_type crystal, data_type deuterium, data_type energy) :
         metal(metal), crystal(crystal), deuterium(deuterium), energy(energy) {}
 
-Resources::data_type Resources::getMetal(void) {
+Resources::data_type Resources::getMetal(void) const{
     return metal;
 }
 
-Resources::data_type Resources::getCrystal(void) {
+Resources::data_type Resources::getCrystal(void) const {
     return crystal;
 }
 
-Resources::data_type Resources::getDeuterium() {
+Resources::data_type Resources::getDeuterium() const {
     return deuterium;
 }
 
-Resources::data_type Resources::at(int n) {
+Resources::data_type Resources::at(int n) const {
     if (n > 3 || n < 0)
         throw (std::string("Index out of bound!"));
 

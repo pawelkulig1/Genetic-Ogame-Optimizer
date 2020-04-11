@@ -8,10 +8,12 @@
 
 #include "DeuteriumMine.h"
 #include "SolarPlant.h"
+#include "FusionPlant.h"
 #include "CrystalMine.h"
 #include "MetalMine.h"
-#include "RobotFactory.h"
 #include "Laboratory.h"
+#include "RobotFactory.h"
+#include "Shipyard.h"
 #include "common_includes.h"
 
 class Planet {
@@ -20,8 +22,11 @@ private:
     CrystalMine crystalMine;
     DeuteriumMine deuteriumMine;
     SolarPlant solarPlant;
+	FusionPlant fusion_plant;
 	Laboratory laboratory;
 	RobotFactory robot_factory;
+	Shipyard shipyard;
+
 	Structure *structure_list[globals::Upgradables::SIZE];
 
     Resources resources;
@@ -37,12 +42,12 @@ public:
     Planet();
 
 	Structure *get_structure(int index);
-    void passTime(int);
-	bool upgrade_structure(int structure_index);
-    Resources getPlanetExtraction();
+    void passTime(double);
+	int upgrade_structure(int structure_index);
+    Resources getPlanetExtraction() const;
 	double getTimeToBuild(int structure_index);
 
-    int calculatePlanetEnergy();
+    int calculatePlanetEnergy() const;
 
     Resources &getResources();
 

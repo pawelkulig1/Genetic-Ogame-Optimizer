@@ -26,41 +26,27 @@ public:
     Resources();
 
     Resources(data_type, data_type);
-
     Resources(data_type, data_type, data_type);
-
     Resources(data_type, data_type, data_type, data_type);
 
-    data_type getMetal(void);
-
-    data_type getCrystal(void);
-
-    data_type getDeuterium();
-
-    data_type at(int n);
+    data_type getMetal(void) const;
+    data_type getCrystal(void) const;
+    data_type getDeuterium() const;
+    data_type at(int n) const;
 
     void setMetal(data_type);
-
     void setCrystal(data_type);
-
     void setDeuterium(data_type);
 
     Resources operator+(Resources);
-
     Resources operator-(Resources);
-
     Resources operator*(data_type);
-
     Resources operator^(data_type);
-
     Resources operator/(data_type);
-
     Resources operator*(data_type) const;
 
     bool operator>=(Resources);
-
 	bool operator>(Resources);
-
 	bool operator>(data_type required);
 
     friend std::ostream &operator<<(std::ostream &stream, const Resources &resources);

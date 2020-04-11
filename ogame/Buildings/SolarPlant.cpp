@@ -5,7 +5,7 @@
 #include <cmath>
 #include "SolarPlant.h"
 
-Resources SolarPlant::getProductionPerHour() {
+Resources SolarPlant::getProductionPerHour() const {
     return Resources(0, 0, 0, productionRatio * lvl * pow(1.1, lvl));
 }
 

@@ -15,7 +15,7 @@ public:
     SolarPlant(Resources defaultCost = Resources(75, 30, 0, 0),
                double costRatio = 1.5, int productionRatio = 20);
 
-    Resources getProductionPerHour();
+    Resources getProductionPerHour() const;
 };
 
 

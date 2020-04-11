@@ -25,6 +25,7 @@ bool test_mines_cost()
 	assert(c.getNextLevelCost().getEnergy() == 0);
 	
 	DeuteriumMine d = DeuteriumMine();
+	std::cout<<d.getNextLevelCost().getMetal() << std::endl;
 	assert(d.getNextLevelCost().getMetal() == 225);
 	assert(d.getNextLevelCost().getCrystal() == 75);
 	assert(d.getNextLevelCost().getDeuterium() == 0);

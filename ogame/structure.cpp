@@ -1,9 +1,15 @@
 #include "structure.h"
 #include <cmath>
 
+Structure::Structure(const Resources &defaultCost, const double costRatio) : defaultCost(defaultCost),
+                                                                           costRatio(costRatio) 
+{
+	lvl = 0;																		   
+	m_requirements = {};
+}
+
 Structure::~Structure()
 {
-	lvl = 0;
 }
 
 int Structure::getLvl() const {
@@ -23,6 +29,7 @@ void Structure::setLvl(int lvl) {
 }
 
 Resources Structure::getNextLevelCost() const {
+	assert(costRatio > 0.0);
     return defaultCost * pow(costRatio, (lvl));
 }
 
@@ -35,8 +42,9 @@ double Structure::getConstructionTime(int robot_factory_level, int nanite_factor
     return (3600 * (nlc.at(0) + nlc.at(1)) / (2500 * (robot_factory_level+ 1)) * pow(0.5, nanite_factory_level));
 }
 
-Structure::Structure(const Resources &defaultCost, const double costRatio) : defaultCost(defaultCost),
-                                                                           costRatio(costRatio) {}
+std::list<Structure::Requirements> Structure::get_requirements() {
+	return m_requirements;
+}
 
 std::string Structure::getName() const {
     return name;
