@@ -9,9 +9,9 @@ Simulation::Simulation() : m_planet(Planet()) {
     time = 0;
 }
 
-double Simulation::run() {
+double Simulation::run(std::vector<int> queue) {
     double tempTime;
-    for (const int structure_index : m_queue) {
+    for (const int structure_index : queue) {
         tempTime = m_planet.getTimeToBuild(structure_index);
         time += tempTime;
         m_planet.passTime(tempTime);

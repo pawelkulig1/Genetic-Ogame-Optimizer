@@ -12,6 +12,8 @@ Planet::Planet() : metalMine(MetalMine()),
                    crystalMine(CrystalMine()),
                    deuteriumMine(DeuteriumMine(25)),
                    solarPlant(SolarPlant()),
+				   laboratory(Laboratory()),
+				   robot_factory(RobotFactory()),
                    resources(Resources(500, 500, 0, 0)),
                    productionFactor(1) 
 {
@@ -33,6 +35,8 @@ void Planet::construct_structure_list()
 	structure_list[1] = &crystalMine;
 	structure_list[2] = &deuteriumMine;
 	structure_list[3] = &solarPlant;
+	structure_list[4] = &laboratory;
+	structure_list[5] = &robot_factory;
 }
 
 void Planet::passTime(int seconds) {
@@ -53,7 +57,7 @@ bool Planet::upgrade_structure(int structure_index)
         resources = resources - upgradeCost;
 
         //add resources loaded during building time
-        resources = resources + (getPlanetExtraction() / 3600) * structure->getConstructionTime(robot_factory_level, nanite_factory_level);
+        resources = resources + (getPlanetExtraction() / 3600) * structure->getConstructionTime(get_robot_factory_level(), nanite_factory_level);
 
         structure->operator++();
         resources.setEnergy(calculatePlanetEnergy());
@@ -118,22 +122,6 @@ Resources Planet::getPlanetExtraction() {
 	//return retResources;
 }
 
-MetalMine &Planet::getMetalMine() {
-    return metalMine;
-}
-
-CrystalMine &Planet::getCrystalMine() {
-    return crystalMine;
-}
-
-DeuteriumMine &Planet::getDeuteriumMine() {
-    return deuteriumMine;
-}
-
-SolarPlant &Planet::getSolarPlant() {
-    return solarPlant;
-}
-
 Resources &Planet::getResources() {
     return resources;
 }
@@ -145,7 +133,7 @@ int Planet::calculatePlanetEnergy() {
 
 int Planet::get_robot_factory_level() const
 {
-	return robot_factory_level;
+	return robot_factory.getLvl();
 }
 
 int Planet::get_nanite_factory_level() const

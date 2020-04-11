@@ -6,7 +6,8 @@
 #include "Building.h"
 
 
-Building::Building(Resources default_cost, double cost_ratio): Structure(default_cost, cost_ratio)
+Building::Building(Resources default_cost, double cost_ratio): 
+	Structure(default_cost, cost_ratio)
 {
 
 }

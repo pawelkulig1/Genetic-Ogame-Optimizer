@@ -17,7 +17,6 @@ DeuteriumMine::DeuteriumMine(int planet_temperature,
 		double productionRatio, 
 		double energyRatio)
         : Mine(defaultCost, costRatio, defaultProductionPerHour, productionRatio, energyRatio) {
-    lvl = 0;
     name = "Deuterium Mine";
 }
 

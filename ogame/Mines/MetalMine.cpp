@@ -16,7 +16,6 @@ MetalMine::MetalMine(const Resources &defaultCost,
 				 productionRatio,
                  energyRatio)
 {
-    lvl = 0;
     name = "Metal Mine";
 }
 

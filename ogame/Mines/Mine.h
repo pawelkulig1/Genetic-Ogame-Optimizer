@@ -22,10 +22,11 @@ protected:
 public:
     Mine(const Resources &defaultCost, const double costRatio, const Resources &defaultProductionPerHour,
          double productionRatio, double energyRatio);
+	Mine();
 
     virtual const Resources getProductionPerHour() const = 0;
 
-    virtual Resources getEnergyConsumption();
+    virtual Resources getEnergyConsumption() const;
 
 
 };

@@ -3,7 +3,7 @@
 
 Structure::~Structure()
 {
-
+	lvl = 0;
 }
 
 int Structure::getLvl() const {

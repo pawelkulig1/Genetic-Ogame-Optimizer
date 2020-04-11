@@ -2,7 +2,9 @@ O_FILES= ogame/Building.o \
 		 ogame/Planet.o \
 		 ogame/Resources.o \
 		 ogame/Simulation.o \
-		 ogame/SolarPlant.o \
+		 ogame/Buildings/SolarPlant.o \
+		 ogame/Buildings/Laboratory.o \
+		 ogame/Buildings/RobotFactory.o \
 		 ogame/Mines/CrystalMine.o \
 		 ogame/Mines/DeuteriumMine.o \
 		 ogame/Mines/MetalMine.o \
@@ -10,18 +12,22 @@ O_FILES= ogame/Building.o \
 		 ogame/structure.o \
 		 genetic_algorithm/basic_crossover_operator.o \
 		 genetic_algorithm/chromosome.o \
-		 genetic_algorithm/crossover.o
+		 genetic_algorithm/crossover.o \
+		 genetic_algorithm/utility.o \
+		 genetic_algorithm/random_generators.o \
 
 TEST_FILES = tests/ogame_test.o \
 			 tests/genetic_test.o
 
 VPATH=	ogame/Mines/ \
+		ogame/Buildings/ \
 		ogame/
 
 INCLUDES=-Iogame \
 		 -Igenetic_algorithm \
-		 -Iogame/Mines
-CXXFLAGS=--std=c++11 -Wall -g $(INCLUDES)
+		 -Iogame/Mines \
+		 -Iogame/Buildings
+CXXFLAGS=--std=c++14 -Wall -g $(INCLUDES)
 
 		
 OUT=main.o
@@ -37,6 +43,7 @@ test: tests/main.cpp $(O_FILES) $(TEST_FILES)
 clean:
 	-rm ogame/*.o
 	-rm ogame/Mines/*.o
+	-rm ogame/Buildings*.o
 	-rm genetic_algorithm/*.o
 	-rm tests/*.o
 

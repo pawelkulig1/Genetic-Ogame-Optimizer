@@ -5,8 +5,8 @@ class Structure
 {
 protected:
 	int lvl;
-	const Resources defaultCost;
-	const double costRatio;
+	Resources defaultCost;
+	double costRatio;
 	std::string name;
 public:
 	virtual ~Structure();

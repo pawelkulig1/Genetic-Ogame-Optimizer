@@ -1,5 +1,7 @@
 #include "basic_crossover_operator.h"
 #include "chromosome.h"
+#include "utility.h"
+#include <iostream>
 
 bool test_basic_crossover()
 {
@@ -21,4 +23,15 @@ bool test_basic_crossover()
 		assert(child.get(i) == out_vec.at(i));
 	}
 	return true;
+}
+
+bool test_generate_random_chromosome()
+{
+	Utility util = Utility();
+	Chromosome temp = util.generate_initial_population(20);
+	for(int i=0;i<temp.size();i++)
+	{
+		std::cout << temp.get(i) << " ";
+	}
+	std::cout<<std::endl;
 }
