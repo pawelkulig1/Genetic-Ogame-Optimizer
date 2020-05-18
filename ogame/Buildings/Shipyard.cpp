@@ -1,4 +1,5 @@
 #include "Shipyard.h"
+#include "common_includes.h"
 
 Shipyard::Shipyard(Resources default_cost) : Building(default_cost)
 {
