@@ -1,5 +1,6 @@
 #include "structure.h"
 #include <cmath>
+#include <cassert>
 
 Structure::Structure(const Resources &defaultCost, const double costRatio):
 					GameObject(defaultCost),

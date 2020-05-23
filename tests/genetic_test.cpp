@@ -2,6 +2,7 @@
 #include "chromosome.h"
 #include "utility.h"
 #include <iostream>
+#include <cassert>
 
 bool test_basic_crossover()
 {

@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include <cassert>
 
 GameObject::GameObject(Resources default_cost): defaultCost(default_cost)
 {

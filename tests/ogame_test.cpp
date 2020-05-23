@@ -4,32 +4,33 @@
 #include "CrystalMine.h"
 #include "DeuteriumMine.h"
 #include "Simulation.h"
+#include <cassert>
 
 bool test_mines_cost()
 {
 	SolarPlant s = SolarPlant();
-	assert(s.getNextLevelCost().getMetal() == 75);
-	assert(s.getNextLevelCost().getCrystal() == 30);
-	assert(s.getNextLevelCost().getDeuterium() == 0);
-	assert(s.getNextLevelCost().getEnergy() == 0);
+	assert(s.getUpgradeCost().getMetal() == 75);
+	assert(s.getUpgradeCost().getCrystal() == 30);
+	assert(s.getUpgradeCost().getDeuterium() == 0);
+	assert(s.getUpgradeCost().getEnergy() == 0);
 
 	MetalMine m = MetalMine();
-	assert(m.getNextLevelCost().getMetal() == 60);
-	assert(m.getNextLevelCost().getCrystal() == 15);
-	assert(m.getNextLevelCost().getDeuterium() == 0);
-	assert(m.getNextLevelCost().getEnergy() == 0);
+	assert(m.getUpgradeCost().getMetal() == 60);
+	assert(m.getUpgradeCost().getCrystal() == 15);
+	assert(m.getUpgradeCost().getDeuterium() == 0);
+	assert(m.getUpgradeCost().getEnergy() == 0);
 
 	CrystalMine c = CrystalMine();
-	assert(c.getNextLevelCost().getMetal() == 48);
-	assert(c.getNextLevelCost().getCrystal() == 24);
-	assert(c.getNextLevelCost().getDeuterium() == 0);
-	assert(c.getNextLevelCost().getEnergy() == 0);
+	assert(c.getUpgradeCost().getMetal() == 48);
+	assert(c.getUpgradeCost().getCrystal() == 24);
+	assert(c.getUpgradeCost().getDeuterium() == 0);
+	assert(c.getUpgradeCost().getEnergy() == 0);
 	
 	DeuteriumMine d = DeuteriumMine();
-	assert(d.getNextLevelCost().getMetal() == 225);
-	assert(d.getNextLevelCost().getCrystal() == 75);
-	assert(d.getNextLevelCost().getDeuterium() == 0);
-	assert(d.getNextLevelCost().getEnergy() == 0);
+	assert(d.getUpgradeCost().getMetal() == 225);
+	assert(d.getUpgradeCost().getCrystal() == 75);
+	assert(d.getUpgradeCost().getDeuterium() == 0);
+	assert(d.getUpgradeCost().getEnergy() == 0);
 
 	return true;
 }
@@ -37,16 +38,16 @@ bool test_mines_cost()
 bool test_upgrade_time()
 {
 	SolarPlant s = SolarPlant();
-	assert(s.getConstructionTime(0, 0) == 3600 * (s.getNextLevelCost().getMetal() + s.getNextLevelCost().getCrystal()) / 2500);
+	assert(s.getConstructionTime(0, 0) == 3600 * (s.getUpgradeCost().getMetal() + s.getUpgradeCost().getCrystal()) / 2500);
 
 	MetalMine m = MetalMine();
-	assert(m.getConstructionTime(0, 0) == 3600 * (m.getNextLevelCost().getMetal() + m.getNextLevelCost().getCrystal()) / 2500);
+	assert(m.getConstructionTime(0, 0) == 3600 * (m.getUpgradeCost().getMetal() + m.getUpgradeCost().getCrystal()) / 2500);
 
 	CrystalMine c = CrystalMine();
-	assert(c.getConstructionTime(0, 0) == 3600 * (c.getNextLevelCost().getMetal() + c.getNextLevelCost().getCrystal()) / 2500);
+	assert(c.getConstructionTime(0, 0) == 3600 * (c.getUpgradeCost().getMetal() + c.getUpgradeCost().getCrystal()) / 2500);
 	
 	DeuteriumMine d = DeuteriumMine();
-	assert(d.getConstructionTime(0, 0) == 3600 * (d.getNextLevelCost().getMetal() + d.getNextLevelCost().getCrystal()) / 2500);
+	assert(d.getConstructionTime(0, 0) == 3600 * (d.getUpgradeCost().getMetal() + d.getUpgradeCost().getCrystal()) / 2500);
 	return true;
 }
 
@@ -61,6 +62,12 @@ bool test_upgrade()
 
 	in = {2, 10, 10, 7, 10, 7, 2, 3, 0, 10, 10, 8, 9, 1, 7, 6, 0, 11, 1, 7, 11};
 	std::cout<<sim.run(in)<<std::endl;
+}
 
+bool test_queues()
+{
+	std::vector<int> in = {3, 0, 0, 3, 1, 3, 0, 0, 3, 2, 1, 3, 2, 2};
+	Simulation sim = Simulation();
+	sim.run(in);
 }
 

@@ -1,4 +1,5 @@
 #include "basic_crossover_operator.h"
+#include <cstdint>
 
 Chromosome BasicCrossoverOperator::cross(const Chromosome &parent1, const Chromosome &parent2)
 {

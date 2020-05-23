@@ -65,7 +65,7 @@ void Planet::passTime(double seconds) {
 	resources.setCrystal(resources.at(1) + (current_extraction.at(1) / 3600) * seconds);
 	resources.setDeuterium(resources.at(2) + (current_extraction.at(2) / 3600) * seconds);
 	buildQueue.passTime(seconds);
-	//std::cout << "time: " << seconds << std::endl;
+	std::cout << "passed time: " << seconds << std::endl;
 	time += seconds;
 }
 
@@ -78,12 +78,14 @@ int Planet::upgrade_structure(int structure_index)
 	const int queue_index = structure->getQueueIndex();
 	double time_to_closest_upgrade = buildQueue.getShortestTime();
 	double time_to_load_resources = getTimeToLoadResources(structure_index);
+
+	std::cout << "structure index: " << structure << structure_index << " ttcu: " << time_to_closest_upgrade << " ttlr: " << time_to_load_resources << "\n";
 	if (time_to_load_resources == -1)
 	{
 		return 3; //cannot build because resources won't be able to load in finite time
 	}
 	bool constructed = false;
-	while((buildQueue.getTime(queue_index) > 0 || time_to_load_resources > 0) && constructed)
+	while((buildQueue.getTime(queue_index) > 0 || time_to_load_resources > 0) && !constructed)
 	{
 		std::cout<<"time to closest upgrade: "<< time_to_closest_upgrade << std::endl;
 		if (time_to_closest_upgrade <= 0)
@@ -96,8 +98,13 @@ int Planet::upgrade_structure(int structure_index)
 		}
 		time_to_load_resources = getTimeToLoadResources(structure_index);
 		time_to_closest_upgrade = buildQueue.getShortestTime();
-		double time_needed = std::min(time_to_load_resources, time_to_closest_upgrade);
-//		std::cout << " " << time_to_load_resources << " " << time_to_closest_upgrade << " " << time_needed << std::endl;
+
+		double time_needed = std::max(time_to_load_resources, time_to_closest_upgrade);
+		if (time_to_load_resources != 0 && time_to_closest_upgrade != 0)
+		{
+			time_needed = std::min(time_to_load_resources, time_to_closest_upgrade);
+		}
+		std::cout << " " << time_to_load_resources << " " << time_to_closest_upgrade << " " << time_needed << std::endl;
 
 		passTime(time_needed);
 	}	

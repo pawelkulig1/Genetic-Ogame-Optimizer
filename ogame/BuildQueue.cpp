@@ -1,5 +1,7 @@
 #include "BuildQueue.h"
 #include "GameObject.h"
+#include <limits>
+#include <cassert>
 
 BuildQueue::BuildQueue()
 {
@@ -75,7 +77,7 @@ GameObject* BuildQueue::getFinishedBuilding() const
 {
 	for (int i=0;i<queues;i++)
 	{
-		if (!m_empty[i])
+		//if (!m_empty[i])
 		{
 			if (time_left[i] <= 0) 
 			{
@@ -114,7 +116,7 @@ bool BuildQueue::addToQueue(int index, GameObject *obj, double construction_time
 void BuildQueue::clearQueue(int index)
 {
 	verify_index(index);
-	assert (time_left[index] > 0);
+	assert (time_left[index] <= 0);
 
 	m_empty[index] = true;
 	time_left[index] = 0.0;

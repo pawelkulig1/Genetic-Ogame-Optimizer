@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <iostream>
+#include <cassert>
+#include <algorithm>
 
 Chromosome Utility::generate_random_chromosome(int size)
 {
