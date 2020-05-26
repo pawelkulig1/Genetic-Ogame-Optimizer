@@ -17,8 +17,9 @@ public:
 	double getTime(int index);
 	double passShortestTime();
 	void passTime(double time);
-	GameObject* getFinishedBuilding() const;
+	GameObject* getFinishedBuilding();
 	int getFinishedIndex() const;
 	bool addToQueue(int index, GameObject *obj, double construction_time);
 	void clearQueue(int index);
+	GameObject* at(int index);
 };

@@ -24,7 +24,7 @@ double Simulation::run(std::vector<int> queue) {
 		else if (status == 3) {
 			return 1e100;
 		}
-
+		std::cout << "cumulative time: " << planet.getTime() << std::endl;
 		//GameObject *structure = m_planet.get_structure(structure_index);
 		//time += structure->getConstructionTime(m_planet.get_robot_factory_level(), m_planet.get_nanite_factory_level());
     }

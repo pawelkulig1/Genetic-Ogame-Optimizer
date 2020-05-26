@@ -65,12 +65,14 @@ void Planet::passTime(double seconds) {
 	resources.setCrystal(resources.at(1) + (current_extraction.at(1) / 3600) * seconds);
 	resources.setDeuterium(resources.at(2) + (current_extraction.at(2) / 3600) * seconds);
 	buildQueue.passTime(seconds);
-	std::cout << "passed time: " << seconds << std::endl;
+	// std::cout << "passed time: " << seconds << std::endl;
 	time += seconds;
 }
 
 int Planet::upgrade_structure(int structure_index)
 {
+	static int counter = 0;
+	std::cout << "counter begin: " << counter << std::endl;
 	GameObject* structure = structure_list[structure_index];
 	Resources upgradeCost = structure->getUpgradeCost();
 	double construction_time = structure->getConstructionTime(
@@ -78,15 +80,18 @@ int Planet::upgrade_structure(int structure_index)
 	const int queue_index = structure->getQueueIndex();
 	double time_to_closest_upgrade = buildQueue.getShortestTime();
 	double time_to_load_resources = getTimeToLoadResources(structure_index);
+	std::cout << "lvl: " << static_cast<Structure*>(structure)->getLvl() << std::endl;
 
-	std::cout << "structure index: " << structure << structure_index << " ttcu: " << time_to_closest_upgrade << " ttlr: " << time_to_load_resources << "\n";
+	std::cout << "structure index: " << structure << " " << structure_index << " ttcu: " << time_to_closest_upgrade << " ttlr: " << time_to_load_resources << "\n";
 	if (time_to_load_resources == -1)
 	{
 		return 3; //cannot build because resources won't be able to load in finite time
 	}
 	bool constructed = false;
-	while((buildQueue.getTime(queue_index) > 0 || time_to_load_resources > 0) && !constructed)
+	//while((buildQueue.getTime(queue_index) > 0 || time_to_load_resources > 0) || (!constructed && !buildQueue.isEmpty()))
+	while(!constructed && !buildQueue.isEmpty())
 	{
+		time_to_closest_upgrade = buildQueue.getShortestTime();
 		std::cout<<"time to closest upgrade: "<< time_to_closest_upgrade << std::endl;
 		if (time_to_closest_upgrade <= 0)
 		{
@@ -104,10 +109,11 @@ int Planet::upgrade_structure(int structure_index)
 		{
 			time_needed = std::min(time_to_load_resources, time_to_closest_upgrade);
 		}
-		std::cout << " " << time_to_load_resources << " " << time_to_closest_upgrade << " " << time_needed << std::endl;
+		std::cout << " ttl: " << time_to_load_resources << " closest upgrade: " << time_to_closest_upgrade << " needed: " << time_needed << std::endl;
 
 		passTime(time_needed);
-	}	
+	}
+	std::cout << "counter: " << counter++ << std::endl;
 	//now when queue is empty, we can build
 	std::cout << productionFactor << std::endl;
 	//check if meets requirements
@@ -166,9 +172,19 @@ double Planet::getProductionFactor() const {
 double Planet::getTimeToLoadResources(int structure_index)
 {
 	GameObject *structure = get_structure(structure_index);
+	const int queue_index = structure->getQueueIndex();
+	Resources upgrade_cost = structure->getUpgradeCost();
+	//case when the same object is in queue and is going to be built, this means we have to calculate cost as if it was built already but production not.
+	if (buildQueue.at(queue_index) == structure && queue_index != globals::QueueIndex::SHIP) {
+		std::cout << "in queue the same object" << std::endl;
+ 		const int lvl = static_cast<Structure *>(structure)->getLvl();
+		static_cast<Structure* >(structure)->setLvl(lvl + 1);
+		upgrade_cost = structure->getUpgradeCost();
+		static_cast<Structure *>(structure)->setLvl(lvl);
+	}
     Resources cost_delta;
     Resources extraction = getPlanetExtraction();
-    cost_delta = resources - structure->getUpgradeCost();
+    cost_delta = resources - upgrade_cost;
 
 	//std::cout << structure_index  << " " << cost_delta << " " << extraction << std::endl;
 	if (cost_delta.at(2) < 0 && extraction.at(2) == 0) {

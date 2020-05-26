@@ -63,7 +63,7 @@ void BuildQueue::passTime(double time)
 			if (time_left[i] <= 0) 
 			{
 				finished_index = i;
-				m_empty[i] = true;
+				//m_empty[i] = true;
 				++safety_counter;
 			}
 		}
@@ -73,7 +73,7 @@ void BuildQueue::passTime(double time)
 	assert (safety_counter < 2);
 }
 
-GameObject* BuildQueue::getFinishedBuilding() const
+GameObject* BuildQueue::getFinishedBuilding()
 {
 	for (int i=0;i<queues;i++)
 	{
@@ -81,6 +81,7 @@ GameObject* BuildQueue::getFinishedBuilding() const
 		{
 			if (time_left[i] <= 0) 
 			{
+				m_empty[i] = true;
 				return queue[i];
 			}
 		}
@@ -134,4 +135,10 @@ bool BuildQueue::verify_index(int index) const
 	assert (index >= 0);
 	assert (index < globals::QueueIndex::END);
 	return true;
+}
+
+GameObject* BuildQueue::at(int index) {
+	assert (index >= 0);
+	assert (index < queues);
+	return queue[index];
 }
