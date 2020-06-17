@@ -53,6 +53,7 @@ void Utility::print()
 
 void Utility::print_copy()
 {
+	std::cout << "m_chromosomes_copy.size(): " << m_chromosomes_copy.size() << std::endl;
 	for (int i=0;i<m_chromosomes_copy.size();++i)
 	{
 		std::cout<<m_chromosomes_copy[i].first << " " << m_chromosomes_copy[i].second << " " << (1 / m_chromosomes_copy[i].second) / 3600 << "\n";	
@@ -152,9 +153,16 @@ void Utility::fill_with_selection()
 	for (int i=0; i< number_to_fill; ++i)
 	{
 		int pos = select();
-		// auto picked = m_chromosomes.at(pos).first;
+		//std::cout << pos << std::endl;
+		auto picked = m_chromosomes.at(pos).first;
+		auto fitness = m_chromosomes.at(pos).second;
+		if ((1.0/fitness)/3600 < 100)
+		{
+			std::cout << "fitness to low" << std::endl;
+		}
 		// std::cout << picked << ", fitness: " << 1.0 / m_chromosomes.at(pos).second << std::endl;
 		m_chromosomes_copy.push_back(m_chromosomes.at(pos));
+		//std::cout << 1.0 / m_chromosomes.at(pos).second / 3600 << std::endl;
 	}
 }
 
@@ -168,7 +176,7 @@ void Utility::resize()
 		int i=0;
 		for (;i<ch->size();i++)
 		{
-			if (ch->get(i) == globals::ASTROPHYSICS)
+			if (ch->get(i) == globals::COLONIZATION_SHIP)
 			{
 				ch->remove_from(i+1);
 				found = true;
@@ -199,10 +207,14 @@ void Utility::run()
 		m_chromosomes_copy.erase(m_chromosomes_copy.begin(), m_chromosomes_copy.end());
 		pick_elite();
 		crossover_chromosomes();
+		resize();
+		//std::cout << "before" << std::endl;
+		//print_copy();
 		//fill_with_new();
 		fill_with_selection();
+		//std::cout << "after!\n=================================================" << std::endl;
+		//print_copy();
 		mutate();
-		resize();
 		m_chromosomes = m_chromosomes_copy;
 		sort_chromosomes();
 		std::cout << "best one: " << m_chromosomes.at(0).first << ", time: " << (1 / m_chromosomes.at(0).second)/3600 << "\n";

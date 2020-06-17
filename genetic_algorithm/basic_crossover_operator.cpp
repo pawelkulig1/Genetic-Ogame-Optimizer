@@ -5,6 +5,10 @@ Chromosome BasicCrossoverOperator::cross(const Chromosome &parent1, const Chromo
 {
 	const int_fast32_t min_size = std::min(parent1.size(), parent2.size()) - 1;
 	const int_fast32_t max_size = std::max(parent1.size(), parent2.size()) - 1;
+	if (min_size == 0)
+	{
+		return parent1;
+	}
 	const int_fast32_t pivot1 = rand() % min_size;
 
 	Chromosome child = Chromosome();

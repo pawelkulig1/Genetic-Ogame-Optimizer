@@ -29,5 +29,9 @@ double Simulation::run(std::vector<int> queue) {
 		}
     }
 	planet.finish_queues();
+	if (planet.getTime() + bonus < 100)
+	{
+		std::cout << "we have error in simulation there!" << std::endl;
+	}
 	return planet.getTime() + bonus;
 }

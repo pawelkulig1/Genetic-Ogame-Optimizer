@@ -29,8 +29,9 @@ double run_simulation(Chromosome chromosome)
 {
 	Simulation sim = Simulation();
 	// auto temp = chromosome.get_vector();
-	
-	return 1/sim.run(chromosome.get_vector());
+	auto score = 1.0/sim.run(chromosome.get_vector());
+	//std::cout << score << std::endl;
+	return score; 
 }
 
 std::vector<globals::Upgradables> example_queue()
