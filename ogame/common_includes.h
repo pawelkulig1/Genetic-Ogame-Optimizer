@@ -23,7 +23,8 @@ namespace globals {
 		//SHIPS
 		SOLAR_SATELLITE = 12,
 		COLONIZATION_SHIP = 13,
-		SIZE 
+		
+		SIZE
 	};
 
 	enum QueueIndex

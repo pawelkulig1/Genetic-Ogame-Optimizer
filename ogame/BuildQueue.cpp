@@ -75,23 +75,24 @@ void BuildQueue::passTime(double time)
 
 GameObject* BuildQueue::getFinishedBuilding()
 {
-	for (int i=0;i<queues;i++)
+	// if finished
+	// for (int i=0;i<queues;i++)
+	// {
+	// 	//if (!m_empty[i])
+	// 	{
+	// 		if (time_left[i] <= 0) 
+	// 		{
+	// 			m_empty[i] = true;
+	// 			return queue[i];
+	// 		}
+	// 	}
+	// }
+	// return nullptr;
+	verify_index(finished_index);
+	if (finished_index != -1)
 	{
-		//if (!m_empty[i])
-		{
-			if (time_left[i] <= 0) 
-			{
-				m_empty[i] = true;
-				return queue[i];
-			}
-		}
+		return queue[finished_index];
 	}
-	return nullptr;
-	//verify_index(finished_index);
-	//if (finished_index != -1)
-	//{
-	//	return queue[finished_index];
-	//}
 	//return nullptr;
 }	
 

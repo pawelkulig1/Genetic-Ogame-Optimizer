@@ -23,6 +23,7 @@ O_FILES= ogame/Building.o \
 		 ogame/Mines/MetalMine.o \
 		 ogame/Mines/Mine.o \
 		 genetic_algorithm/basic_crossover_operator.o \
+		 genetic_algorithm/uniform_crossover_operator.o \
 		 genetic_algorithm/chromosome.o \
 		 genetic_algorithm/crossover.o \
 		 genetic_algorithm/utility.o \

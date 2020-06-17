@@ -65,6 +65,11 @@ Chromosome::data_store::const_iterator Chromosome::end() const
 	return m_chromosome.end();
 }
 
+void Chromosome::remove_from(int index) 
+{
+	m_chromosome = data_store(m_chromosome.begin(), m_chromosome.begin() + index);
+}
+
 std::ostream &operator<<(std::ostream &out, const Chromosome &chromosome)
 {
 	for (int i=0;i<chromosome.m_chromosome.size();++i)

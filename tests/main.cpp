@@ -8,6 +8,7 @@ extern bool test_basic_crossover();
 //extern bool test_generate_initial_population();
 extern bool test_upgrade();
 extern bool test_queues();
+extern bool test_my_queue();
 
 int main()
 {
@@ -17,5 +18,6 @@ int main()
 	//test_upgrade_time();
 	//test_basic_crossover();
 	// test_upgrade();
-	test_queues();
+	// test_queues();
+	test_my_queue();
 }

@@ -66,8 +66,19 @@ bool test_upgrade()
 
 bool test_queues()
 {
-	std::vector<int> in = {3, 3, 3, 3, 3, 3, 0, 0, 3, 2, 1, 3, 2, 2};
+	std::vector<int> in = {0, 3, 0, 0, 3, 1, 3, 0, 3, 0};
 	Simulation sim = Simulation();
+	double out = sim.run(in);
+	in = {0, 3, 1, 2, 5, 5, 5, 9, 0};
 	sim.run(in);
+	
+	// std::cout << out << std::endl;
 }
 
+bool test_my_queue()
+{
+	std::vector<int> in = {3,3,0,3,0,2,3,2,0,3,1,3,3,3,3,1,0,0,1,1,3,3,0,0,1,0,3,2,3,2,0,0,2,2,3,1,0,2,1,0,0,4,6,1,3,2,7,8};
+	Simulation sim = Simulation();
+	double out = sim.run(in);
+	std::cout << out << std::endl;
+}

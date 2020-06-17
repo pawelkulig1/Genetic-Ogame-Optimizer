@@ -71,8 +71,8 @@ void Planet::passTime(double seconds) {
 
 int Planet::upgrade_structure(int structure_index)
 {
-	static int counter = 0;
-	std::cout << "counter begin: " << counter << std::endl;
+	// static int counter = 0;
+	// std::cout << "counter begin: " << counter << std::endl;
 	GameObject* structure = structure_list[structure_index];
 	Resources upgradeCost = structure->getUpgradeCost();
 	double construction_time = structure->getConstructionTime(
@@ -80,9 +80,8 @@ int Planet::upgrade_structure(int structure_index)
 	const int queue_index = structure->getQueueIndex();
 	double time_to_closest_upgrade = buildQueue.getShortestTime();
 	double time_to_load_resources = getTimeToLoadResources(structure_index);
-	std::cout << "lvl: " << static_cast<Structure*>(structure)->getLvl() << std::endl;
 
-	std::cout << "structure index: " << structure << " " << structure_index << " ttcu: " << time_to_closest_upgrade << " ttlr: " << time_to_load_resources << "\n";
+	// std::cout << "structure index: " << structure << " " << structure_index << " ttcu: " << time_to_closest_upgrade << " ttlr: " << time_to_load_resources << "\n";
 	if (time_to_load_resources == -1)
 	{
 		return 3; //cannot build because resources won't be able to load in finite time
@@ -92,7 +91,7 @@ int Planet::upgrade_structure(int structure_index)
 	while(!constructed && !buildQueue.isEmpty())
 	{
 		time_to_closest_upgrade = buildQueue.getShortestTime();
-		std::cout<<"time to closest upgrade: "<< time_to_closest_upgrade << std::endl;
+		// std::cout<<"time to closest upgrade: "<< time_to_closest_upgrade << std::endl;
 		if (time_to_closest_upgrade <= 0)
 		{
         	buildQueue.getFinishedBuilding()->operator++();
@@ -109,13 +108,13 @@ int Planet::upgrade_structure(int structure_index)
 		{
 			time_needed = std::min(time_to_load_resources, time_to_closest_upgrade);
 		}
-		std::cout << " ttl: " << time_to_load_resources << " closest upgrade: " << time_to_closest_upgrade << " needed: " << time_needed << std::endl;
+		// std::cout << " ttl: " << time_to_load_resources << " closest upgrade: " << time_to_closest_upgrade << " needed: " << time_needed << std::endl;
 
 		passTime(time_needed);
 	}
-	std::cout << "counter: " << counter++ << std::endl;
+	// std::cout << "counter: " << counter++ << std::endl;
 	//now when queue is empty, we can build
-	std::cout << productionFactor << std::endl;
+	// std::cout << productionFactor << std::endl;
 	//check if meets requirements
 	if (structure->get_requirements().size() > 0)
 	{
@@ -126,7 +125,7 @@ int Planet::upgrade_structure(int structure_index)
 				return 2; //not meeting requirements
 			}
 		}
-	}	
+	}
 
 	if (!buildQueue.addToQueue(queue_index, structure, construction_time)) {
 		throw(std::runtime_error("queue not empty when upgrading!"));
@@ -141,9 +140,25 @@ int Planet::upgrade_structure(int structure_index)
 	return 0;
 }
 
+void Planet::finish_queues()
+{
+	while(!buildQueue.isEmpty())
+	{
+		double time_to_closest_upgrade = buildQueue.getShortestTime();
+		if (time_to_closest_upgrade <= 0)
+		{
+			buildQueue.getFinishedBuilding()->operator++();
+			resources.setEnergy(calculatePlanetEnergy());
+			calculateProductionFactor();
+			buildQueue.clearQueue(buildQueue.getFinishedIndex());
+		}
+		passTime(time_to_closest_upgrade);
+	}
+}
+
 void Planet::calculateProductionFactor()
 {
-	std::cout << "calculateProductionFactor" << std::endl;
+	// std::cout << "calculateProductionFactor" << std::endl;
     if (metalMine.getEnergyConsumption().at(3) +
         crystalMine.getEnergyConsumption().at(3) +
         deuteriumMine.getEnergyConsumption().at(3) == 0)
@@ -176,7 +191,7 @@ double Planet::getTimeToLoadResources(int structure_index)
 	Resources upgrade_cost = structure->getUpgradeCost();
 	//case when the same object is in queue and is going to be built, this means we have to calculate cost as if it was built already but production not.
 	if (buildQueue.at(queue_index) == structure && queue_index != globals::QueueIndex::SHIP) {
-		std::cout << "in queue the same object" << std::endl;
+		// std::cout << "in queue the same object" << std::endl;
  		const int lvl = static_cast<Structure *>(structure)->getLvl();
 		static_cast<Structure* >(structure)->setLvl(lvl + 1);
 		upgrade_cost = structure->getUpgradeCost();

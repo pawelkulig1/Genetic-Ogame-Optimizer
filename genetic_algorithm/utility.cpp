@@ -47,7 +47,7 @@ void Utility::print()
 {
 	for (int i=0;i<m_population_size;++i)
 	{
-		std::cout<<m_chromosomes[i].first << " " << m_chromosomes[i].second << " " << (1 / m_chromosomes[i].second) / 3600 << "\n";
+		std::cout<<m_chromosomes[i].first << " " << m_chromosomes[i].second << " " << (1 / m_chromosomes[i].second) / 3600 << " hours\n";
 	}
 }
 
@@ -78,7 +78,6 @@ int Utility::select()
 	{
 		sum_of_fitness += pair.second;
 	}
-	//std::uniform_real_distribution<double> dist(0, sum_of_fitness);
 	double temp = 0;
 	
 	double pos = RandomGenerators::get_instance()->get_random_double(0, sum_of_fitness); 
@@ -97,7 +96,7 @@ int Utility::select()
 void Utility::pick_elite()
 {
 	int elite_size = elite_ratio * static_cast<double>(m_population_size);
-	//std::cout<< "elite size: " << elite_size << std::endl; 
+	//std::cout<< "elite size: " << elite_size << std::endl;
 	for (int i=0;i<elite_size;i++)
 	{			
 		m_chromosomes_copy.push_back(m_chromosomes.at(i));
@@ -107,7 +106,8 @@ void Utility::pick_elite()
 void Utility::mutate()
 {
 	RandomGenerators * rg = RandomGenerators::get_instance();
-	for (int i=0;i<m_chromosomes_copy.size();i++)
+	int mutation_start = m_population_size * elite_ratio;
+	for (int i=mutation_start;i<m_chromosomes_copy.size();i++)
 	{			
 		if (rg->get_random_double(0, 1) < mutation_rate)
 		{
@@ -139,26 +139,70 @@ void Utility::crossover_chromosomes()
 void Utility::fill_with_new()
 {
 	const int number_to_fill = m_population_size - m_chromosomes_copy.size();
-	for (int i=0; i< number_to_fill; ++i)
+	for (int i=0; i<number_to_fill; ++i)
 	{
 		Chromosome rnd = generate_random_chromosome(m_default_chromosome_size);
 		m_chromosomes_copy.push_back(std::make_pair(rnd, m_fitness_function(rnd)));
 	}
 }
+
+void Utility::fill_with_selection()
+{
+	const int number_to_fill = m_population_size - m_chromosomes_copy.size();
+	for (int i=0; i< number_to_fill; ++i)
+	{
+		int pos = select();
+		// auto picked = m_chromosomes.at(pos).first;
+		// std::cout << picked << ", fitness: " << 1.0 / m_chromosomes.at(pos).second << std::endl;
+		m_chromosomes_copy.push_back(m_chromosomes.at(pos));
+	}
+}
+
+void Utility::resize()
+{
+	RandomGenerators *rnd = RandomGenerators::get_instance();
+	for (int c=0;c<m_chromosomes_copy.size();c++)
+	{
+		Chromosome *ch = &m_chromosomes_copy.at(c).first;
+		bool found = false;
+		int i=0;
+		for (;i<ch->size();i++)
+		{
+			if (ch->get(i) == globals::ASTROPHYSICS)
+			{
+				ch->remove_from(i+1);
+				found = true;
+				break;
+			}
+		}
+		if (!found)
+		{
+			for(;i<m_default_chromosome_size;i++)
+			{
+				ch->append_gene(rnd->get_random_int(0, globals::Upgradables::SIZE-1));
+			}
+		}
+		
+		// m_chromosomes_copy.at(c).first = ch.at(c).begin(), ch.begin() + i);
+	}
+}
+
 void Utility::run()
 {
 	m_chromosomes_copy.reserve(m_population_size);
 	prepare_initial_population();
 	print();
 
-	for (int epoch=0; epoch<1500;++epoch)
+	for (int epoch=0; epoch<5000;++epoch)
 	{
 		std::cout<< "Epoch: " << epoch << ", ";
 		m_chromosomes_copy.erase(m_chromosomes_copy.begin(), m_chromosomes_copy.end());
 		pick_elite();
 		crossover_chromosomes();
-		fill_with_new();
+		//fill_with_new();
+		fill_with_selection();
 		mutate();
+		resize();
 		m_chromosomes = m_chromosomes_copy;
 		sort_chromosomes();
 		std::cout << "best one: " << m_chromosomes.at(0).first << ", time: " << (1 / m_chromosomes.at(0).second)/3600 << "\n";

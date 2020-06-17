@@ -8,7 +8,7 @@
 class Utility
 {
 	int m_population_size = 100;
-	int m_default_chromosome_size = 20;
+	int m_default_chromosome_size = 150;
 	Crossover *m_crossover_strategy;
 	std::function<double (Chromosome)> m_fitness_function;
 	std::vector<std::pair<Chromosome, double> > m_chromosomes;
@@ -23,8 +23,10 @@ class Utility
 	void pick_elite();
 	void mutate();
 	void fill_with_new();
+	void fill_with_selection();
 	int select();
 	void print_copy();
+	void resize();
 
 public:
 	Chromosome generate_random_chromosome(int size);	

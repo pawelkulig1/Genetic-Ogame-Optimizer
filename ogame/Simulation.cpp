@@ -11,10 +11,13 @@ Simulation::Simulation() {
 
 double Simulation::run(std::vector<int> queue) {
 	Planet planet = Planet();
-	//double time = 0;
-    //double tempTime;
+	// bool finish = false;
+	double bonus = 0;
+	int iteration = 0;
     for (const int structure_index : queue) {
+		iteration++;
 		int status = planet.upgrade_structure(structure_index);
+
         if (status == 1) {
 			throw(std::runtime_error("Simulation::run(): unable to upgrade structure"));
         }
@@ -24,10 +27,7 @@ double Simulation::run(std::vector<int> queue) {
 		else if (status == 3) {
 			return 1e100;
 		}
-		std::cout << "cumulative time: " << planet.getTime() << std::endl;
-		//GameObject *structure = m_planet.get_structure(structure_index);
-		//time += structure->getConstructionTime(m_planet.get_robot_factory_level(), m_planet.get_nanite_factory_level());
     }
-	//std::cout<<time<<std::endl;
-	return planet.getTime();
+	planet.finish_queues();
+	return planet.getTime() + bonus;
 }

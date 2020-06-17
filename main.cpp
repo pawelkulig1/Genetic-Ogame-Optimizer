@@ -1,6 +1,7 @@
 #include "Simulation.h"
 #include "utility.h"
 #include "basic_crossover_operator.h"
+#include "uniform_crossover_operator.h"
 #include "random_generators.h"
 
 std::vector<globals::Upgradables> example_queue();
@@ -14,12 +15,12 @@ int main() {
 	Utility util = Utility();
 	util.set_fitness_function(&run_simulation);
 	
-	BasicCrossoverOperator crossover_strategy = BasicCrossoverOperator();
-	util.set_crossover_strategy(crossover_strategy);
+	Crossover *crossover_strategy = new UniformCrossoverOperator();
+	util.set_crossover_strategy(*crossover_strategy);
 
 	util.run();
 	//util.print();
-
+	delete crossover_strategy;
     return 0;
 }
 
@@ -27,6 +28,8 @@ int main() {
 double run_simulation(Chromosome chromosome)
 {
 	Simulation sim = Simulation();
+	// auto temp = chromosome.get_vector();
+	
 	return 1/sim.run(chromosome.get_vector());
 }
 

@@ -68,6 +68,7 @@ public:
 	GameObject *get_structure(int index);
     void passTime(double);
 	int upgrade_structure(int structure_index);
+	void finish_queues();
     Resources getPlanetExtraction() const;
 	double getTimeToLoadResources(int structure_index);
 
