@@ -14,13 +14,22 @@ BuildQueue::BuildQueue()
 	finished_index = -1;
 }
 
-bool BuildQueue::isEmpty() const
+bool BuildQueue::isEmpty(int index) const
 {
-	for (int i=0;i<queues;i++)
+	if(index == -1)
 	{
-		if (!m_empty[i]) return false;
+		for (int i=0;i<queues;i++)
+		{
+			if (!m_empty[i]) return false;
+		}
+		return true;
 	}
-	return true;
+	else
+	{
+		verify_index(index);
+		return m_empty[index];
+	}
+	
 }
 
 double BuildQueue::getShortestTime() const

@@ -55,6 +55,22 @@ void Chromosome::reserve(size_t size)
 	m_chromosome.reserve(size);
 }
 
+void Chromosome::swap(int pos1, int pos2)
+{
+	auto temp = m_chromosome.at(pos1);
+	m_chromosome.at(pos1) = m_chromosome.at(pos2);
+	m_chromosome.at(pos2) = temp;
+}
+
+int Chromosome::has(chromosome_type obj)
+{
+	for (int i=0;i<m_chromosome.size();i++)
+	{
+		if (m_chromosome.at(i) == obj) return i;
+	}
+	return -1;
+}
+
 Chromosome::data_store::const_iterator Chromosome::begin() const
 {
 	return m_chromosome.begin();

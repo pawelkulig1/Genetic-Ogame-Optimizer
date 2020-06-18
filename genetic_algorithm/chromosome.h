@@ -19,6 +19,8 @@ public:
 	void reserve(size_t size);
 	void remove_from(int index);
 	void set_chromosome(int pos, data_store::const_iterator beg, const data_store::const_iterator end);
+	void swap(int pos1, int pos2);
+	int has(chromosome_type obj);
 	data_store::const_iterator begin() const;
 	data_store::const_iterator end() const;	
 

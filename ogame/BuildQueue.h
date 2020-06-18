@@ -12,7 +12,7 @@ class BuildQueue {
 
 public:
 	BuildQueue();
-	bool isEmpty() const;
+	bool isEmpty(int index=-1) const;
 	double getShortestTime() const;
 	double getTime(int index);
 	double passShortestTime();

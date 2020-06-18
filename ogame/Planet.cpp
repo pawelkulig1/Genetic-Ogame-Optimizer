@@ -88,7 +88,7 @@ int Planet::upgrade_structure(int structure_index)
 	}
 	bool constructed = false;
 	//while((buildQueue.getTime(queue_index) > 0 || time_to_load_resources > 0) || (!constructed && !buildQueue.isEmpty()))
-	while(!constructed && !buildQueue.isEmpty())
+	while(!constructed && !buildQueue.isEmpty(queue_index))
 	{
 		time_to_closest_upgrade = buildQueue.getShortestTime();
 		// std::cout<<"time to closest upgrade: "<< time_to_closest_upgrade << std::endl;
@@ -98,6 +98,13 @@ int Planet::upgrade_structure(int structure_index)
 			constructed = true;
         	resources.setEnergy(calculatePlanetEnergy());
 			calculateProductionFactor();
+
+			//if two times in row these needs to be updated once again
+			upgradeCost = structure->getUpgradeCost(); 
+			construction_time = structure->getConstructionTime(
+			get_robot_factory_level(), get_nanite_factory_level());
+
+
 			buildQueue.clearQueue(buildQueue.getFinishedIndex());
 		}
 		time_to_load_resources = getTimeToLoadResources(structure_index);
@@ -131,6 +138,7 @@ int Planet::upgrade_structure(int structure_index)
 		throw(std::runtime_error("queue not empty when upgrading!"));
 	}
 
+	
     if (resources >= upgradeCost) {
         resources = resources - upgradeCost;
 	}

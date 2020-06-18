@@ -15,7 +15,7 @@ int main() {
 	Utility util = Utility();
 	util.set_fitness_function(&run_simulation);
 	
-	Crossover *crossover_strategy = new UniformCrossoverOperator();
+	Crossover *crossover_strategy = new BasicCrossoverOperator();
 	util.set_crossover_strategy(*crossover_strategy);
 
 	util.run();
@@ -31,7 +31,7 @@ double run_simulation(Chromosome chromosome)
 	// auto temp = chromosome.get_vector();
 	auto score = 1.0/sim.run(chromosome.get_vector());
 	//std::cout << score << std::endl;
-	return score; 
+	return score;
 }
 
 std::vector<globals::Upgradables> example_queue()
