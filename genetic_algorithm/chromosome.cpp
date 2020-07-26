@@ -86,6 +86,11 @@ void Chromosome::remove_from(int index)
 	m_chromosome = data_store(m_chromosome.begin(), m_chromosome.begin() + index);
 }
 
+void Chromosome::remove(int index)
+{
+	m_chromosome.erase(m_chromosome.begin() + index, m_chromosome.begin() + index + 1);
+}
+
 std::ostream &operator<<(std::ostream &out, const Chromosome &chromosome)
 {
 	for (int i=0;i<chromosome.m_chromosome.size();++i)

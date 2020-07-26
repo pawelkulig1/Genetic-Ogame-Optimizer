@@ -22,6 +22,9 @@ O_FILES= ogame/Building.o \
 		 ogame/Mines/DeuteriumMine.o \
 		 ogame/Mines/MetalMine.o \
 		 ogame/Mines/Mine.o \
+		 ogame/Storage/MetalStorage.o \
+		 ogame/Storage/CrystalStorage.o \
+		 ogame/Storage/DeuteriumStorage.o \
 		 genetic_algorithm/basic_crossover_operator.o \
 		 genetic_algorithm/uniform_crossover_operator.o \
 		 genetic_algorithm/chromosome.o \
@@ -36,6 +39,7 @@ VPATH=	ogame/Mines/ \
 		ogame/Buildings/ \
 		ogame/Ships/ \
 		ogame/Technologies/ \
+		ogame/Storage/ \
 		ogame/
 
 INCLUDES=-Iogame \
@@ -43,7 +47,8 @@ INCLUDES=-Iogame \
 		 -Iogame/Mines \
 		 -Iogame/Buildings \
 		 -Iogame/Ships \
-		 -Iogame/Technologies
+		 -Iogame/Technologies \
+		 -Iogame/Storage
 
 CXXFLAGS=--std=c++14 -Wall -g $(INCLUDES)
 
@@ -63,6 +68,8 @@ clean:
 	-rm ogame/Mines/*.o
 	-rm ogame/Buildings/*.o
 	-rm ogame/Technologies/*.o
+	-rm ogame/Ships/*.o
+	-rm ogame/Storage/*.o
 	-rm genetic_algorithm/*.o
 	-rm tests/*.o
 

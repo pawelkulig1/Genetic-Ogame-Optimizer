@@ -15,6 +15,9 @@
 #include "Laboratory.h"
 #include "RobotFactory.h"
 #include "Shipyard.h"
+#include "MetalStorage.h"
+#include "CrystalStorage.h"
+#include "DeuteriumStorage.h"
 
 #include "Astrophysics.h"
 #include "EspionageTechnology.h"
@@ -39,6 +42,10 @@ private:
 	Laboratory laboratory;
 	RobotFactory robot_factory;
 	Shipyard shipyard;
+
+	MetalStorage metal_storage;
+	CrystalStorage crystal_storage;
+	DeuteriumStorage deuterium_storage;
 
 	//Technologies
 	Astrophysics astrophysics;
@@ -73,7 +80,7 @@ public:
 	double getTimeToLoadResources(int structure_index);
 
     int calculatePlanetEnergy() const;
-    Resources &getResources();
+    Resources getResources() const;
 	void calculateProductionFactor();
     double getProductionFactor() const;
 	int get_nanite_factory_level() const;

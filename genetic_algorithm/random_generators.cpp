@@ -1,4 +1,5 @@
 #include "random_generators.h"
+#include <stdexcept>
 
 RandomGenerators *RandomGenerators::m_random_generators = nullptr;
 
@@ -24,6 +25,9 @@ double RandomGenerators::get_random_double(double min, double max)
 
 int RandomGenerators::get_random_int(int min, int max)
 {
+	if (max <= min){
+		throw(std::runtime_error("get_random_int max <= min"));
+	}
 	std::uniform_int_distribution<int> dist(min, max);
 	return dist(mt);
 }

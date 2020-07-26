@@ -14,7 +14,7 @@ Chromosome Utility::generate_random_chromosome(int size)
     RandomGenerators *rnd = RandomGenerators::get_instance();
     for (int i=0;i<size/1;i++)
     {
-        ret.append_gene(rnd->get_random_int(0, 3));
+        ret.append_gene(rnd->get_random_int(0, 7));
     }
 
     for (int i=size/1;i<size;i++)
@@ -25,11 +25,31 @@ Chromosome Utility::generate_random_chromosome(int size)
     return ret;
 }
 
+Chromosome Utility::generate_random_possible_chromosome(int size)
+{
+    Chromosome ret = Chromosome();
+    ret.reserve(size);
+    RandomGenerators *rnd = RandomGenerators::get_instance();
+    for (int i=0;i<size;i++) {
+        ret.append_gene(rnd->get_random_int(0, globals::Upgradables::SIZE-1));
+        int counter = 0;
+        while(m_fitness_function(ret) == 1e-100){
+            ret.replace_gene(rnd->get_random_int(0, globals::Upgradables::SIZE-1), i);
+            if(counter++ > 100) {
+                return ret;
+            }
+        }
+        // std::cout<<"i: " << i << std::endl;
+    }
+    return ret;
+}
+
 void Utility::prepare_initial_population()
 {
     for (int i=0;i<m_population_size; ++i)
     {
-        Chromosome chromosome = generate_random_chromosome(m_default_chromosome_size);
+        Chromosome chromosome = generate_random_possible_chromosome(m_default_chromosome_size);
+        std::cout << i << std::endl;
         double fitness = m_fitness_function(chromosome);
         m_chromosomes.push_back(std::make_pair(chromosome, fitness));
         //std::cout<<chromosome << " " << fitness << " " <<fitness / 3600 << "\n";
@@ -110,7 +130,7 @@ void Utility::mutate_flip()
     int mutation_start = m_population_size * elite_ratio;
     for (int i=mutation_start;i<m_chromosomes_copy.size();i++)
     {			
-        if (rg->get_random_double(0, 1) < mutation_rate)
+        while (rg->get_random_double(0, 1) < mutation_rate)
         {
             m_chromosomes_copy.at(i).first.replace_gene(rg->get_random_int(0, globals::Upgradables::SIZE - 1), rg->get_random_int(0, m_chromosomes_copy.at(i).first.size()-1));
             m_chromosomes_copy.at(i).second = m_fitness_function(m_chromosomes_copy.at(i).first);
@@ -125,10 +145,32 @@ void Utility::mutate_swap()
     for (int i=mutation_start;i<m_chromosomes_copy.size();i++)
     {		
         auto ch	= &m_chromosomes_copy.at(i).first;
-        if (rg->get_random_double(0, 1) < swap_rate)
+        while (rg->get_random_double(0, 1) < swap_rate)
         {
+            if (ch->size() <= 2) {
+                break;
+            }
             int pos = rg->get_random_int(0, ch->size() - 2);
             ch->swap(pos, pos+1);
+            m_chromosomes_copy.at(i).second = m_fitness_function(m_chromosomes_copy.at(i).first);
+        }
+    }
+}
+
+void Utility::mutate_prune()
+{
+    RandomGenerators * rg = RandomGenerators::get_instance();
+    int mutation_start = m_population_size * elite_ratio;
+    for (int i=mutation_start;i<m_chromosomes_copy.size();i++)
+    {		
+        auto ch	= &m_chromosomes_copy.at(i).first;
+        while (rg->get_random_double(0, 1) < prune_rate)
+        {
+            if (ch->size() <= 2) {
+                break;
+            }
+            int pos = rg->get_random_int(0, ch->size() - 1);
+            ch->remove(pos);
             m_chromosomes_copy.at(i).second = m_fitness_function(m_chromosomes_copy.at(i).first);
         }
     }
@@ -207,7 +249,7 @@ void Utility::run()
     prepare_initial_population();
     print();
 
-    for (int epoch=0; epoch<50000;++epoch)
+    for (int epoch=0; epoch<500000;++epoch)
     {
         std::cout<< "Epoch: " << epoch << ", ";
         m_chromosomes_copy.erase(m_chromosomes_copy.begin(), m_chromosomes_copy.end());
@@ -216,6 +258,7 @@ void Utility::run()
         fill_with_selection();
         mutate_flip();
         mutate_swap();
+        mutate_prune();
         resize();
         m_chromosomes = std::vector<std::pair<Chromosome, double> > (m_chromosomes_copy.begin(), m_chromosomes_copy.end());
         sort_chromosomes();
