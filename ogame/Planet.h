@@ -80,6 +80,7 @@ public:
 	double getTimeToLoadResources(int structure_index);
 
     int calculatePlanetEnergy() const;
+	Resources getPlanetEnergyProduction() const;
     Resources getResources() const;
 	void calculateProductionFactor();
     double getProductionFactor() const;

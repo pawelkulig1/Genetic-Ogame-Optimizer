@@ -202,7 +202,7 @@ void Planet::calculateProductionFactor()
     }
 
     productionFactor = (
-           static_cast<double>(solarPlant.getProductionPerHour().at(3)) /
+           static_cast<double>(getPlanetEnergyProduction().at(3)) /
            (
                metalMine.getEnergyConsumption().at(3) +
                crystalMine.getEnergyConsumption().at(3) +
@@ -236,15 +236,15 @@ double Planet::getTimeToLoadResources(int structure_index)
     cost_delta = resources - upgrade_cost;
 
     //std::cout << structure_index  << " " << cost_delta << " " << extraction << std::endl;
-    if (cost_delta.at(2) < 0 && extraction.at(2) == 0 || resources.at(2) + abs(cost_delta.at(2)) > deuterium_storage.getStorageCapacity().at(2)) {
+    if ((cost_delta.at(2) < 0 && extraction.at(2) == 0) || resources.at(2) + abs(cost_delta.at(2)) > deuterium_storage.getStorageCapacity().at(2)) {
         return -1;
     }
     
-    if (cost_delta.at(1) < 0 && extraction.at(1) == 0 || resources.at(1) + abs(cost_delta.at(1)) > crystal_storage.getStorageCapacity().at(1)) {
+    if ((cost_delta.at(1) < 0 && extraction.at(1)) == 0 || resources.at(1) + abs(cost_delta.at(1)) > crystal_storage.getStorageCapacity().at(1)) {
         return -1;
     }
 
-    if (cost_delta.at(0) < 0 && extraction.at(0) == 0 || resources.at(0) + abs(cost_delta.at(0)) > metal_storage.getStorageCapacity().at(0)) {
+    if ((cost_delta.at(0) < 0 && extraction.at(0) == 0) || resources.at(0) + abs(cost_delta.at(0)) > metal_storage.getStorageCapacity().at(0)) {
         return -1;
     }
 
@@ -300,6 +300,20 @@ Resources Planet::getResources() const {
     return resources;
 }
 
+Resources Planet::getPlanetEnergyProduction() const
+{
+		
+    Resources fusion_additional_energy = Resources(0, 0, 0, fusion_plant.getProductionPerHour(energy_technology.getLvl()).at(3));
+    if (deuteriumMine.getDefaultProductionPerHour().at(2) < fusion_plant.getProductionPerHour(energy_technology.getLvl()).at(2))
+    {
+        fusion_additional_energy.setEnergy(0);
+    }
+
+    return solarPlant.getProductionPerHour()
+            + fusion_additional_energy
+            + solar_satellite.getProductionPerHour(planet_temperature);
+
+}
 int Planet::calculatePlanetEnergy() const {
     Resources fusion_additional_energy = Resources(0, 0, 0, fusion_plant.getProductionPerHour(energy_technology.getLvl()).at(3));
     if (deuteriumMine.getDefaultProductionPerHour().at(2) < fusion_plant.getProductionPerHour(energy_technology.getLvl()).at(2))
