@@ -27,9 +27,11 @@ double Simulation::run(std::vector<int> queue) {
             throw(std::runtime_error("Simulation::run(): unable to upgrade structure"));
         }
         else if (status == 2) {
+			//std::cout << "status 2" << std::endl;
             return 1e100;
         }
         else if (status == 3) {
+			//std::cout << "status 3" << std::endl;
             return 1e100;
         }
     }

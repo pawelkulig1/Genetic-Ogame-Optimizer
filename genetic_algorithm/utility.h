@@ -8,7 +8,7 @@
 class Utility
 {
 	int m_population_size = 100;
-	int m_default_chromosome_size = 100;
+	int m_default_chromosome_size = 200;
 	Crossover *m_crossover_strategy;
 	std::function<double (Chromosome)> m_fitness_function;
 	std::vector<std::pair<Chromosome, double> > m_chromosomes;

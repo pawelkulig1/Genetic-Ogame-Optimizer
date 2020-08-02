@@ -33,6 +33,7 @@ Chromosome Utility::generate_random_possible_chromosome(int size)
     for (int i=0;i<size;i++) {
         ret.append_gene(rnd->get_random_int(0, globals::Upgradables::SIZE-1));
         int counter = 0;
+//		std::cout << ret << std::endl;
         while(m_fitness_function(ret) == 1e-100){
             ret.replace_gene(rnd->get_random_int(0, globals::Upgradables::SIZE-1), i);
             if(counter++ > 100) {
@@ -130,11 +131,14 @@ void Utility::mutate_flip()
     int mutation_start = m_population_size * elite_ratio;
     for (int i=mutation_start;i<m_chromosomes_copy.size();i++)
     {			
-        while (rg->get_random_double(0, 1) < mutation_rate)
-        {
-            m_chromosomes_copy.at(i).first.replace_gene(rg->get_random_int(0, globals::Upgradables::SIZE - 1), rg->get_random_int(0, m_chromosomes_copy.at(i).first.size()-1));
-            m_chromosomes_copy.at(i).second = m_fitness_function(m_chromosomes_copy.at(i).first);
-        }
+		if (m_chromosomes_copy.at(i).first.size() > 2) 
+		{
+        	while (rg->get_random_double(0, 1) < mutation_rate)
+        	{
+        	    m_chromosomes_copy.at(i).first.replace_gene(rg->get_random_int(0, globals::Upgradables::SIZE - 1), rg->get_random_int(0, m_chromosomes_copy.at(i).first.size()-1));
+        	    m_chromosomes_copy.at(i).second = m_fitness_function(m_chromosomes_copy.at(i).first);
+        	}
+		}
     }
 }
 

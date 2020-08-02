@@ -108,13 +108,29 @@ bool test_my_queue4()
 	std::cout << out << std::endl;
 }
 
-bool test_my_queue()
+bool test_my_queue5()
 {
 	std::vector<int> in = {0, 0, 0, 2, 2, 3, 1, 3, 11, 3, 0, 1, 0, 0, 3, 2, 0, 1, 1, 2, 1, 1, 3, 3, 2, 0, 1, 1, 1, 3, 2, 2, 0, 2, 0, 
 	1, 0, 1, 1, 2, 3, 2, 2, 0, 1, 0, 2, 0, 3, 1, 1, 3, 3, 2, 0, 0, 2, 0, 1, 0, 1, 2, 3, 0, 1, 0, 1, 0, 2, 1, 0, 1, 0, 2, 0, 3, 1, 0, 
 	2, 1, 2, 2, 3, 2, 3, 2, 3, 0, 1, 3, 3, 1, 3, 3, 1, 2, 3, 0, 0, 2, 3, 2, 2, 0, 3, 2, 2, 1, 3, 2, 2, 2, 3, 3, 2, 3, 1, 2, 1, 3, 2, 
 	1, 2, 2, 2, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 2, 3, 2, 2, 3, 1, 2, 0, 3, 3, 0, 2, 1, 2, 3, 0, 0, 2, 1, 3, 0, 3, 0, 3, 3, 3, 3, 
 	3, 2, 0, 3, 0, 0, 0, 2, 2, 1, 0, 0, 0, 1, 2, 3, 0, 1, 0, 0, 3, 2, 0, 2, 0, 1, 2, 3, 0, 3, 0, 0, 0, 3, 3, 2};
+	Simulation sim = Simulation();
+	double out = sim.run(in);
+	std::cout << out << std::endl;
+}
+
+bool test_my_queue6()
+{
+	std::vector<int> in = {0};
+	Simulation sim = Simulation();
+	double out = sim.run(in);
+	std::cout << out << std::endl;
+}
+
+bool test_my_queue()
+{
+	std::vector<int> in = {6, 5, 0, 0, 2, 5, 2, 4, 5, 4, 5, 1, 9, 8, 1, 6, 6, 0, 6, 4, 16};
 	Simulation sim = Simulation();
 	double out = sim.run(in);
 	std::cout << out << std::endl;

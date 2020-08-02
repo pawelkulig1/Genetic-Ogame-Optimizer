@@ -236,15 +236,15 @@ double Planet::getTimeToLoadResources(int structure_index)
     cost_delta = resources - upgrade_cost;
 
     //std::cout << structure_index  << " " << cost_delta << " " << extraction << std::endl;
-    if ((cost_delta.at(2) < 0 && extraction.at(2) == 0) || resources.at(2) + abs(cost_delta.at(2)) > deuterium_storage.getStorageCapacity().at(2)) {
+    if (cost_delta.at(2) < 0 && (extraction.at(2) == 0 || resources.at(2) + abs(cost_delta.at(2)) > deuterium_storage.getStorageCapacity().at(2))) {
         return -1;
     }
     
-    if ((cost_delta.at(1) < 0 && extraction.at(1)) == 0 || resources.at(1) + abs(cost_delta.at(1)) > crystal_storage.getStorageCapacity().at(1)) {
+    if (cost_delta.at(1) < 0 && (extraction.at(1) == 0 || resources.at(1) + abs(cost_delta.at(1)) > crystal_storage.getStorageCapacity().at(1))) {
         return -1;
     }
 
-    if ((cost_delta.at(0) < 0 && extraction.at(0) == 0) || resources.at(0) + abs(cost_delta.at(0)) > metal_storage.getStorageCapacity().at(0)) {
+    if (cost_delta.at(0) < 0 && (extraction.at(0) == 0 || resources.at(0) + abs(cost_delta.at(0)) > metal_storage.getStorageCapacity().at(0))) {
         return -1;
     }
 
@@ -258,13 +258,27 @@ double Planet::getTimeToLoadResources(int structure_index)
                                         (cost_delta.at(1) / extraction.at(1))};
         return abs(*std::min_element(temp, temp+2)) * 3600 + 1;
     }
-    else
+    else if (extraction.at(1) == 0)
     {
         Resources::data_type temp[3] = {(cost_delta.at(0) / extraction.at(0)),
-                                        (cost_delta.at(1) / extraction.at(1)),
+										1e100,
                                         (cost_delta.at(2) / extraction.at(2))};
         return abs(*std::min_element(temp, temp+3)) * 3600 + 1;
     }
+    else if (extraction.at(0) == 0)
+    {
+        Resources::data_type temp[3] = {1e100,
+										(cost_delta.at(1) / extraction.at(1)),
+                                        (cost_delta.at(2) / extraction.at(2))};
+        return abs(*std::min_element(temp, temp+3)) * 3600 + 1;
+    }
+	else
+	{
+        Resources::data_type temp[3] = {(cost_delta.at(0) / extraction.at(0)),
+										(cost_delta.at(1) / extraction.at(1)),
+                                        (cost_delta.at(2) / extraction.at(2))};
+        return abs(*std::min_element(temp, temp+3)) * 3600 + 1;
+	}
 }
 
 Resources Planet::getPlanetExtraction() const {
