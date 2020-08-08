@@ -61,11 +61,13 @@ private:
 	BuildQueue buildQueue;
 
     Resources resources;
-	const int planet_temperature = 25;
+	const int planet_temperature;
 	int nanite_factory_level = 0;
 	
 	//Production factor is based on avaliable energy on planet
     double productionFactor;
+	bool can_upgrade_shipyard = true;
+	bool can_upgrade_laboratory = true;
 
 	void construct_structure_list();
 
@@ -86,8 +88,11 @@ public:
     double getProductionFactor() const;
 	int get_nanite_factory_level() const;
 	int get_robot_factory_level() const;
+	int get_laboratory_level() const;
+	int get_shipyard_level() const;
 	int get_planet_temperature() const;
 	double getTime() const;
+	double get_construction_time(int structure_index) const;
 };
 
 

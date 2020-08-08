@@ -8,9 +8,10 @@
 #include <algorithm>
 #include <iostream>
 
-Planet::Planet() : metalMine(MetalMine()),
+Planet::Planet() : planet_temperature(75),
+                   metalMine(MetalMine()),
                    crystalMine(CrystalMine()),
-                   deuteriumMine(DeuteriumMine(25)),
+                   deuteriumMine(DeuteriumMine(75)),
                    solarPlant(SolarPlant()),
                    fusion_plant(FusionPlant()),
                    laboratory(Laboratory()),
@@ -46,7 +47,7 @@ GameObject *Planet::get_structure(int index)
 void Planet::construct_structure_list()
 {
     int i = 0;
-    structure_list[i++] = &metalMine;
+    structure_list[i++] = &metalMine; //0
     structure_list[i++] = &crystalMine;
     structure_list[i++] = &deuteriumMine;
     structure_list[i++] = &metal_storage;
@@ -100,47 +101,61 @@ int Planet::upgrade_structure(int structure_index)
 {
     GameObject* structure = structure_list[structure_index];
     Resources upgradeCost = structure->getUpgradeCost();
-    double construction_time = structure->getConstructionTime(
-            get_robot_factory_level(), get_nanite_factory_level());
+
+    if (!can_upgrade_laboratory && structure_index == globals::Upgradables::LABORATORY)
+    {
+        buildQueue.lockQueue(globals::QueueIndex::BUILDING, buildQueue.getTime(globals::QueueIndex::TECHNOLOGY));
+    }
+
+    if (!can_upgrade_shipyard && structure_index == globals::Upgradables::SHIPYARD)
+    {
+        buildQueue.lockQueue(globals::QueueIndex::BUILDING, buildQueue.getTime(globals::QueueIndex::SHIP));
+    }
+    
+    double construction_time = get_construction_time(structure_index);
     const int queue_index = structure->getQueueIndex();
     double time_to_closest_upgrade = buildQueue.getShortestTime();
     double time_to_load_resources = getTimeToLoadResources(structure_index);
 
     // std::cout << "structure index: " << structure << " " << structure_index << " ttcu: " << time_to_closest_upgrade << " ttlr: " << time_to_load_resources << "\n";
-    if (time_to_load_resources == -1)
+    if (time_to_load_resources == -1 && buildQueue.isEmpty(-1))
     {
         return 3; //cannot build because resources won't be able to load in finite time
     }
-    bool constructed = false;
+    //bool constructed = false;
+    // std::cout << "buildQueue: " << buildQueue.getTime(0) << " " << buildQueue.getTime(1) << " " << buildQueue.getTime(2) << std::endl;
     while(!buildQueue.isEmpty(queue_index) || !(getTimeToLoadResources(structure_index) == 0))
     {
-        if (getTimeToLoadResources(structure_index) == -1) {
+        if (getTimeToLoadResources(structure_index) == -1 && buildQueue.isEmpty(-1)) {
             return 3;
         }
         time_to_closest_upgrade = buildQueue.getShortestTime();
         // std::cout<<"time to closest upgrade: "<< time_to_closest_upgrade << std::endl;
-        if (time_to_closest_upgrade <= 0 && !buildQueue.isEmpty(queue_index))
+        if (time_to_closest_upgrade <= 0 && !buildQueue.isEmpty(buildQueue.getFinishedIndex()))
         {
+            // std::cout << 
             buildQueue.getFinishedBuilding()->operator++();
-            constructed = true;
+            //constructed = true;
             resources.setEnergy(calculatePlanetEnergy());
             calculateProductionFactor();
 
             //if two times in row these needs to be updated once again
             upgradeCost = structure->getUpgradeCost(); 
-            construction_time = structure->getConstructionTime(
-            get_robot_factory_level(), get_nanite_factory_level());
+            construction_time = get_construction_time(structure_index);
 
             buildQueue.clearQueue(buildQueue.getFinishedIndex());
-
         }
         time_to_load_resources = getTimeToLoadResources(structure_index);
         time_to_closest_upgrade = buildQueue.getShortestTime();
 
         double time_needed = std::max(time_to_load_resources, time_to_closest_upgrade);
-        if ((time_to_load_resources != 0 && time_to_closest_upgrade > 0) || (buildQueue.isEmpty(queue_index) && time_to_load_resources == 0))
+        if ((time_to_load_resources > 0 && time_to_closest_upgrade > 0) || (buildQueue.isEmpty(queue_index) && time_to_load_resources == 0))
         {
             time_needed = std::min(time_to_load_resources, time_to_closest_upgrade);
+        }
+        if (time_to_closest_upgrade == -1)
+        {
+            time_needed == -1;
         }
         // std::cout << " ttl: " << time_to_load_resources << " closest upgrade: " << time_to_closest_upgrade << " needed: " << time_needed << std::endl;
 
@@ -171,7 +186,52 @@ int Planet::upgrade_structure(int structure_index)
     else {
         throw(std::runtime_error("Not enough resources when upgrading!"));
     }
+
+    //lock other queues for some structures:
+    //1. technology if lab
+    //2. lab if technology
+    //3. ships if shipyard
+    //4. shipyard if ship
+
+    can_upgrade_laboratory = buildQueue.isEmpty(globals::QueueIndex::TECHNOLOGY);
+    can_upgrade_shipyard = buildQueue.isEmpty(globals::QueueIndex::SHIP);
+    if (structure_index == globals::Upgradables::LABORATORY)
+    {
+        buildQueue.lockQueue(globals::QueueIndex::TECHNOLOGY, get_construction_time(structure_index));
+    }
+
+    if (structure_index == globals::Upgradables::SHIPYARD)
+    {
+        buildQueue.lockQueue(globals::QueueIndex::SHIP, get_construction_time(structure_index));
+    }
+
+
     return 0;
+}
+
+double Planet::get_construction_time(int structure_index) const
+{
+    GameObject *obj = structure_list[structure_index];
+    const int queue_index = obj->getQueueIndex();
+    if (queue_index == 0)
+    {
+        return obj->getConstructionTime(
+            get_robot_factory_level(), get_nanite_factory_level());
+    }
+    else if (queue_index == 1)
+    {
+        return obj->getConstructionTime(
+            get_laboratory_level(), get_nanite_factory_level());
+    }
+    else if (queue_index == 2)
+    {
+        return obj->getConstructionTime(
+            get_shipyard_level(), get_nanite_factory_level());
+    }
+    else 
+    {
+        throw(std::runtime_error("get_construction_time queue index above 2"));
+    }
 }
 
 void Planet::finish_queues()
@@ -252,33 +312,11 @@ double Planet::getTimeToLoadResources(int structure_index)
         return 0;
     }
 
-    if (extraction.at(2) == 0)
-    {	
-        Resources::data_type temp[2] = {(cost_delta.at(0) / extraction.at(0)),
-                                        (cost_delta.at(1) / extraction.at(1))};
-        return abs(*std::min_element(temp, temp+2)) * 3600 + 1;
-    }
-    else if (extraction.at(1) == 0)
-    {
-        Resources::data_type temp[3] = {(cost_delta.at(0) / extraction.at(0)),
-										1e100,
-                                        (cost_delta.at(2) / extraction.at(2))};
-        return abs(*std::min_element(temp, temp+3)) * 3600 + 1;
-    }
-    else if (extraction.at(0) == 0)
-    {
-        Resources::data_type temp[3] = {1e100,
-										(cost_delta.at(1) / extraction.at(1)),
-                                        (cost_delta.at(2) / extraction.at(2))};
-        return abs(*std::min_element(temp, temp+3)) * 3600 + 1;
-    }
-	else
-	{
-        Resources::data_type temp[3] = {(cost_delta.at(0) / extraction.at(0)),
-										(cost_delta.at(1) / extraction.at(1)),
-                                        (cost_delta.at(2) / extraction.at(2))};
-        return abs(*std::min_element(temp, temp+3)) * 3600 + 1;
-	}
+    Resources::data_type temp[3] = {1e100, 1e100, 1e100};
+    if(extraction.at(2) != 0) temp[2] = cost_delta.at(2) / extraction.at(2);
+    if(extraction.at(1) != 0) temp[1] = cost_delta.at(1) / extraction.at(1);
+    if(extraction.at(0) != 0) temp[0] = cost_delta.at(0) / extraction.at(0);
+    return abs(*std::min_element(temp, temp+2)) * 3600 + 1;
 }
 
 Resources Planet::getPlanetExtraction() const {
@@ -356,6 +394,16 @@ int Planet::get_nanite_factory_level() const
 int Planet::get_planet_temperature() const
 {
     return planet_temperature;
+}
+
+int Planet::get_shipyard_level() const
+{
+    return shipyard.getLvl();
+}
+
+int Planet::get_laboratory_level() const
+{
+    return laboratory.getLvl();
 }
 
 double Planet::getTime() const

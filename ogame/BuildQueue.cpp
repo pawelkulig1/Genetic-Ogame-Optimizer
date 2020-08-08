@@ -63,46 +63,26 @@ double BuildQueue::passShortestTime()
 
 void BuildQueue::passTime(double time)
 {
-    int safety_counter = 0;
     for (int i=0;i<queues;i++)
     {
         if (!m_empty[i])
         {
             time_left[i] -= time;
-            if (time_left[i] <= 0) 
+            if (time_left[i] <= 0 && queue[i] != nullptr) 
             {
                 finished_index = i;
-                //m_empty[i] = true;
-                ++safety_counter;
             }
         }
     }
-    // if (safety_counter >= 2)
-    // 	std::cout << "Warning!" << safety_counter << std::endl;
-    // //assert (safety_counter < 2);
 }
 
 GameObject* BuildQueue::getFinishedBuilding()
 {
-    // if finished
-    // for (int i=0;i<queues;i++)
-    // {
-    // 	//if (!m_empty[i])
-    // 	{
-    // 		if (time_left[i] <= 0) 
-    // 		{
-    // 			m_empty[i] = true;
-    // 			return queue[i];
-    // 		}
-    // 	}
-    // }
-    // return nullptr;
     verify_index(finished_index);
     if (finished_index != -1)
     {
         return queue[finished_index];
     }
-    //return nullptr;
 }	
 
 int BuildQueue::getFinishedIndex() const
@@ -133,7 +113,27 @@ void BuildQueue::clearQueue(int index)
     time_left[index] = 0.0;
     queue[index] = nullptr;
 
+    for(int i=0;i<queues;i++) 
+    {
+        if (time_left[i] <= 0 && queue[i] == nullptr)
+        {
+            m_empty[i] = true;
+            time_left[i] = 0.0;
+        }
+    }
 }
+
+void BuildQueue::lockQueue(int index, double time)
+{
+    verify_index(index);
+    if (m_empty[index])
+    {
+        time_left[index] = time;
+        m_empty[index] = false;
+        queue[index] = nullptr;
+    }
+}
+
 double BuildQueue::getTime(int index)
 {
     verify_index(index);

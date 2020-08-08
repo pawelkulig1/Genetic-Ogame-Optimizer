@@ -21,5 +21,6 @@ public:
 	int getFinishedIndex() const;
 	bool addToQueue(int index, GameObject *obj, double construction_time);
 	void clearQueue(int index);
+	void lockQueue(int index, double time);
 	GameObject* at(int index);
 };

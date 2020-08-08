@@ -11,7 +11,7 @@
 class DeuteriumMine : public Mine {
 	int m_planet_temperature;
 public:
-    DeuteriumMine(int planet_temperature = 25,
+    DeuteriumMine(int planet_temperature = 75,
 				  const Resources &defaultCost = Resources(225, 75, 0, 0),
                   const double costRatio = 1.5,
                   const Resources &defaultProductionPerHour = Resources(0, 0, 0, 0),

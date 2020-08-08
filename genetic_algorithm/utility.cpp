@@ -53,7 +53,7 @@ void Utility::prepare_initial_population()
         std::cout << i << std::endl;
         double fitness = m_fitness_function(chromosome);
         m_chromosomes.push_back(std::make_pair(chromosome, fitness));
-        //std::cout<<chromosome << " " << fitness << " " <<fitness / 3600 << "\n";
+        std::cout<<(1.0/fitness) / 3600 << "\n";
     }
     sort_chromosomes();
 }
@@ -128,12 +128,12 @@ void Utility::pick_elite()
 void Utility::mutate_flip()
 {
     RandomGenerators * rg = RandomGenerators::get_instance();
-    int mutation_start = m_population_size * elite_ratio;
+    int mutation_start = 1;//m_population_size * elite_ratio;
     for (int i=mutation_start;i<m_chromosomes_copy.size();i++)
     {			
 		if (m_chromosomes_copy.at(i).first.size() > 2) 
 		{
-        	while (rg->get_random_double(0, 1) < mutation_rate)
+        	while (rg->get_random_double(0, 1) < dynamic_mutation_rate)
         	{
         	    m_chromosomes_copy.at(i).first.replace_gene(rg->get_random_int(0, globals::Upgradables::SIZE - 1), rg->get_random_int(0, m_chromosomes_copy.at(i).first.size()-1));
         	    m_chromosomes_copy.at(i).second = m_fitness_function(m_chromosomes_copy.at(i).first);
@@ -145,11 +145,11 @@ void Utility::mutate_flip()
 void Utility::mutate_swap()
 {
     RandomGenerators * rg = RandomGenerators::get_instance();
-    int mutation_start = m_population_size * elite_ratio;
+    int mutation_start = 1;// m_population_size * elite_ratio;
     for (int i=mutation_start;i<m_chromosomes_copy.size();i++)
     {		
         auto ch	= &m_chromosomes_copy.at(i).first;
-        while (rg->get_random_double(0, 1) < swap_rate)
+        while (rg->get_random_double(0, 1) < dynamic_swap_rate)
         {
             if (ch->size() <= 2) {
                 break;
@@ -164,11 +164,11 @@ void Utility::mutate_swap()
 void Utility::mutate_prune()
 {
     RandomGenerators * rg = RandomGenerators::get_instance();
-    int mutation_start = m_population_size * elite_ratio;
+    int mutation_start = 1; //m_population_size * elite_ratio;
     for (int i=mutation_start;i<m_chromosomes_copy.size();i++)
     {		
         auto ch	= &m_chromosomes_copy.at(i).first;
-        while (rg->get_random_double(0, 1) < prune_rate)
+        while (rg->get_random_double(0, 1) < dynamic_prune_rate)
         {
             if (ch->size() <= 2) {
                 break;
@@ -253,6 +253,7 @@ void Utility::run()
     prepare_initial_population();
     print();
 
+    std::array<double, 10> last_scores = {0};
     for (int epoch=0; epoch<500000;++epoch)
     {
         std::cout<< "Epoch: " << epoch << ", ";
@@ -266,7 +267,25 @@ void Utility::run()
         resize();
         m_chromosomes = std::vector<std::pair<Chromosome, double> > (m_chromosomes_copy.begin(), m_chromosomes_copy.end());
         sort_chromosomes();
-        std::cout << "best one: " << m_chromosomes.at(0).first << ", time: " << (1 / m_chromosomes.at(0).second)/3600 << " " << (1.0 / m_fitness_function(m_chromosomes.at(0).first))/3600 <<" "<< m_fitness_function(m_chromosomes.at(0).first) << "\n";
+        std::cout << "best one: " << m_chromosomes.at(0).first << ", time: " << (1 / m_chromosomes.at(0).second)/3600 << " " << m_fitness_function(m_chromosomes.at(0).first) << "\n";
+        last_scores[epoch%10] = m_chromosomes.at(0).second;
+
+        
+        // if (std::max_element(last_scores.begin(), last_scores.end()) == std::min_element(last_scores.begin(), last_scores.end()))
+        // {
+        //     //increase mutation rate
+        //     dynamic_mutation_rate = dynamic_mutation_rate * 1.005 > 0.5 ? dynamic_mutation_rate : dynamic_mutation_rate * 1.005;
+        //     dynamic_swap_rate = dynamic_swap_rate * 1.005 > 0.5 ? dynamic_swap_rate : dynamic_swap_rate * 1.005;
+        //     dynamic_prune_rate = dynamic_prune_rate * 1.005 > 0.5 ? dynamic_prune_rate : dynamic_prune_rate * 1.005;
+
+        //     std::cout <<dynamic_mutation_rate << std::endl;
+        // }
+        // else
+        // {
+        //     dynamic_mutation_rate = mutation_rate;
+        //     dynamic_swap_rate = swap_rate;
+        //     dynamic_prune_rate = prune_rate;
+        // }
         assert (m_population_size == m_chromosomes.size());
     }
     print();

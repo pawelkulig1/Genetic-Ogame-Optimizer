@@ -7,7 +7,7 @@
 
 class Utility
 {
-	int m_population_size = 100;
+	int m_population_size = 200;
 	int m_default_chromosome_size = 200;
 	Crossover *m_crossover_strategy;
 	std::function<double (Chromosome)> m_fitness_function;
@@ -18,6 +18,10 @@ class Utility
 	double swap_rate = 0.3;
 	double prune_rate = 0.3;
 	double elite_ratio = 0.1;
+
+	double dynamic_mutation_rate = mutation_rate;
+	double dynamic_swap_rate = swap_rate;
+	double dynamic_prune_rate = prune_rate;
 
 	void sort_chromosomes();
 	void drop_weak();
