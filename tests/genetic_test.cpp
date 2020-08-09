@@ -1,4 +1,5 @@
 #include "basic_crossover_operator.h"
+#include "PMX_crossover_operator.h"
 #include "chromosome.h"
 #include "utility.h"
 #include <iostream>
@@ -26,3 +27,23 @@ bool test_basic_crossover()
 	return true;
 }
 
+void test_PMX_crossover()
+{
+    PMXCrossoverOperator crossover = PMXCrossoverOperator();
+	Chromosome parent1 = Chromosome();
+	Chromosome parent2 = Chromosome();
+	std::vector<Chromosome::chromosome_type> vec1 = {1,2,3,4,5};
+	std::vector<Chromosome::chromosome_type> vec2 = {5,4,3,2,1};
+	parent1.set_chromosome(vec1);
+	parent2.set_chromosome(vec2);
+
+	Chromosome child = crossover.cross(parent1, parent2);
+	std::cout << child << std::endl;
+}
+
+
+void run_genetic()
+{
+	//test_basic_crossover();
+	test_PMX_crossover();
+}

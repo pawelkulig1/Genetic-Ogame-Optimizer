@@ -7,21 +7,23 @@
 
 class Utility
 {
-	int m_population_size = 200;
+	int m_population_size = 50;
 	int m_default_chromosome_size = 200;
 	Crossover *m_crossover_strategy;
 	std::function<double (Chromosome)> m_fitness_function;
 	std::vector<std::pair<Chromosome, double> > m_chromosomes;
 	std::vector<std::pair<Chromosome, double> > m_chromosomes_copy;
-	double drop_rate = 0.3;
+	double drop_rate = 0.2;
 	double mutation_rate = 0.1;
-	double swap_rate = 0.3;
-	double prune_rate = 0.3;
+	double swap_rate = 0.1;
+	double prune_rate = 0.1;
+	double add_rate = 0.1;
 	double elite_ratio = 0.1;
 
 	double dynamic_mutation_rate = mutation_rate;
 	double dynamic_swap_rate = swap_rate;
 	double dynamic_prune_rate = prune_rate;
+	double dynamic_add_rate = add_rate;
 
 	void sort_chromosomes();
 	void drop_weak();
@@ -30,6 +32,7 @@ class Utility
 	void mutate_flip();
 	void mutate_swap();
 	void mutate_prune();
+	void mutate_add();
 	void fill_with_new();
 	void fill_with_selection();
 	int select();

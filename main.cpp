@@ -2,6 +2,7 @@
 #include "utility.h"
 #include "basic_crossover_operator.h"
 #include "uniform_crossover_operator.h"
+#include "PMX_crossover_operator.h"
 #include "random_generators.h"
 
 std::vector<globals::Upgradables> example_queue();
@@ -15,7 +16,7 @@ int main() {
 	Utility util = Utility();
 	util.set_fitness_function(&run_simulation);
 	
-	Crossover *crossover_strategy = new BasicCrossoverOperator();
+	Crossover *crossover_strategy = new PMXCrossoverOperator();
 	util.set_crossover_strategy(*crossover_strategy);
 
 	util.run();

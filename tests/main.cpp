@@ -7,16 +7,13 @@ extern bool test_upgrade_time();
 extern bool test_basic_crossover();
 //extern bool test_generate_initial_population();
 extern void run_ogame();
+extern void run_genetic();
 
 int main()
 {
 	
 	// srand(time(NULL));
-	//test_mines_cost();
-	//test_upgrade_time();
-	//test_basic_crossover();
-	// test_upgrade();
-	// test_queues();
 	run_ogame();
+	run_genetic();
 	
 }

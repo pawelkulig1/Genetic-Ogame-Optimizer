@@ -27,6 +27,7 @@ O_FILES= ogame/Building.o \
 		 ogame/Storage/DeuteriumStorage.o \
 		 genetic_algorithm/basic_crossover_operator.o \
 		 genetic_algorithm/uniform_crossover_operator.o \
+		 genetic_algorithm/PMX_crossover_operator.o \
 		 genetic_algorithm/chromosome.o \
 		 genetic_algorithm/crossover.o \
 		 genetic_algorithm/utility.o \

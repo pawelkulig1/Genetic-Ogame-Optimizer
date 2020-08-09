@@ -288,6 +288,24 @@ void test_my_queue17()
 	std::cout << planet.getTime() << " " << planet.getResources() << " " <<planet.getPlanetExtraction() << std::endl;
 }
 
+void test_my_queue18()
+{
+	std::vector<int> in = {1, 6, 1, 6, 0, 0, 0, 3, 0, 3, 1, 2, 2, 3, 3, 2, 2, 4, 6, 4, 9, 8, 14, 0, 3, 8, 6, 5, 14, 13, 14, 5, 1, 1, 1, 6, 3, 2, 7, 9, 9, 5, 3, 5, 2, 4, 9, 7, 7, 1, 5, 14, 3, 5, 0, 5, 10, 13, 6, 6, 2, 9, 10, 15, 8, 3, 6, 7, 9, 13, 10, 4, 4, 13, 15, 12, 15, 3, 5, 3, 12, 2, 12, 2, 4, 8, 1, 4, 8, 9, 5, 6, 2, 2, 1, 2, 10, 6, 14, 6, 12, 16, 9, 13, 3, 6, 7, 10, 0, 14, 2, 1, 0, 10, 2, 14, 16, 11, 13, 14, 4, 8, 14, 2, 8, 9, 0, 5, 6, 16, 0, 3, 2, 5, 12, 15, 10, 11, 3, 9, 15, 2, 13, 3, 12, 12, 4, 13, 13, 12, 4, 3, 6, 16, 11, 9, 6, 12, 15, 8, 16, 5, 3, 0, 9, 9, 15, 7, 9, 11, 3, 6, 2, 7, 2, 15, 13, 3, 9, 2, 11, 7, 1, 11, 0, 3, 16, 15, 16, 4, 14, 14, 14, 15, 14, 15, 4, 14, 14, 15};
+	Planet planet = Planet();
+	for (int s: in){
+		int status = planet.upgrade_structure(s);
+		if (status != 0)
+		{
+			std::cout <<"error in status: " << status << std::endl;
+			break;
+		}
+	}
+	planet.finish_queues();
+	
+	std::cout << planet.getTime() << " " << planet.getResources() << " " <<planet.getPlanetExtraction() << std::endl;
+	
+}
+
 
 void run_ogame()
 {
@@ -313,6 +331,7 @@ void run_ogame()
 	test_my_queue15();
 	test_my_queue16();
 	test_my_queue17();
+	test_my_queue18();
 
 }
 
