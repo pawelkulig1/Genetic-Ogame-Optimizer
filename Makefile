@@ -15,9 +15,11 @@ O_FILES= ogame/Building.o \
 		 ogame/Technologies/EnergyTechnology.o \
 		 ogame/Technologies/EspionageTechnology.o \
 		 ogame/Technologies/ImpulseDrive.o \
+		 ogame/Technologies/CombustionDrive.o \
 		 ogame/Ship.o \
 		 ogame/Ships/SolarSatellite.o \
 		 ogame/Ships/ColonizationShip.o \
+		 ogame/Ships/SmallCargo.o \
 		 ogame/Mines/CrystalMine.o \
 		 ogame/Mines/DeuteriumMine.o \
 		 ogame/Mines/MetalMine.o \

@@ -19,12 +19,14 @@ namespace globals {
         //TECHNOLOGIES
         ASTROPHYSICS         = 11,
         ESPIONAGE_TECHNOLOGY = 12,
-        IMPULSE_DRIVE        = 13,
-        ENERGY_TECHNOLOGY    = 14,
+        COMBUSTION_DRIVE     = 13, //tu
+        IMPULSE_DRIVE        = 14,
+        ENERGY_TECHNOLOGY    = 15,
 
         //SHIPS
-        SOLAR_SATELLITE   = 15,
-        COLONIZATION_SHIP = 16,
+        SOLAR_SATELLITE   = 16,
+        COLONIZATION_SHIP = 17,
+        SMALL_CARGO       = 18,
         
         SIZE
     };
@@ -40,5 +42,3 @@ namespace globals {
 
     static constexpr int SAFETY_GUARD = 1;
 }
-
-

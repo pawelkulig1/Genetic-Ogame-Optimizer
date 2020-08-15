@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cassert>
 #include <algorithm>
+#include <fstream>
 
 Chromosome Utility::generate_random_chromosome(int size)
 {
@@ -290,6 +291,11 @@ void Utility::run()
         sort_chromosomes();
         std::cout << "best one: " << m_chromosomes.at(0).first << ", time: " << (1 / m_chromosomes.at(0).second)/3600 << " " << m_fitness_function(m_chromosomes.at(0).first) << "\n";
         assert (m_population_size == m_chromosomes.size());
+
+        // std::fstream file;
+        // file.open("fitness.out", std::ios::app);
+        // file << (1 / m_chromosomes.at(0).second)/3600 << std::endl;
+        // file.close();
     }
     print();
 }

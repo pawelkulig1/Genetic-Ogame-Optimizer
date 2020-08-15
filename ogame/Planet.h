@@ -21,11 +21,13 @@
 
 #include "Astrophysics.h"
 #include "EspionageTechnology.h"
+#include "CombustionDrive.h"
 #include "ImpulseDrive.h"
 #include "EnergyTechnology.h"
 
 #include "SolarSatellite.h"
 #include "ColonizationShip.h"
+#include "SmallCargo.h"
 
 #include "common_includes.h"
 
@@ -50,12 +52,14 @@ private:
 	//Technologies
 	Astrophysics astrophysics;
 	EspionageTechnology espionage_technology;
+	CombustionDrive combustion_drive;
 	ImpulseDrive impulse_drive;
 	EnergyTechnology energy_technology;
 
 	//Ships
 	SolarSatellite solar_satellite;
 	ColonizationShip colonization_ship;
+	SmallCargo small_cargo;
 
 	GameObject *structure_list[globals::Upgradables::SIZE];
 	BuildQueue buildQueue;

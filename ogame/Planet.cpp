@@ -23,11 +23,13 @@ Planet::Planet() : planet_temperature(75),
 
                    astrophysics(Astrophysics()),
                    espionage_technology(EspionageTechnology()),
+                   combustion_drive(CombustionDrive()),
                    impulse_drive(ImpulseDrive()),
                    energy_technology(EnergyTechnology()),
 
                    solar_satellite(SolarSatellite()),
                    colonization_ship(ColonizationShip()),
+                   small_cargo(SmallCargo()),
 
                    buildQueue(BuildQueue()),
                    resources(Resources(500, 500, 0, 0)),
@@ -61,11 +63,13 @@ void Planet::construct_structure_list()
     
     structure_list[i++] = &astrophysics;
     structure_list[i++] = &espionage_technology;
+    structure_list[i++] = &combustion_drive;
     structure_list[i++] = &impulse_drive;
     structure_list[i++] = &energy_technology;
 
     structure_list[i++] = &solar_satellite;
     structure_list[i++] = &colonization_ship;
+    structure_list[i++] = &small_cargo;
 }
 
 void Planet::passTime(double seconds) {

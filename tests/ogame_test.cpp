@@ -306,32 +306,110 @@ void test_my_queue18()
 	
 }
 
+void test_my_queue19()
+{
+	//193.888
+	std::vector<int> in = {6,0,0,6,0,0,6,0,6,1,1,0,6,1,1,6,0,1,0,6,1,6,0,1,6,2,2,2,6,1,2,9,6,2,4,2,1,6,1,2,1,9,10,15,6,1,2,8,8,10,14,8,12,12,12,13,13,10,13,10,3,3,3,12,11,16};
+	Simulation sim = Simulation();
+	double out = sim.run(in); // 697996
+	// assert(out < 697996 && out > 697996);
+}
+
+void test_my_queue20()
+{
+	//193.942
+	std::vector<int> in = {6,0,0,6,0,0,6,0,6,1,1,0,6,1,1,6,0,1,0,6,1,0,6,1,6,1,2,6,2,2,2,9,6,1,2,9,10,2,15,2,6,1,1,4,6,1,2,8,8,8,12,12,14,10,13,13,12,12,13,10,3,3,10,11,3,16};
+	Simulation sim = Simulation();
+	double out = sim.run(in); // 697996
+	// assert(out < 697996 && out > 697996);
+}
+
+void test_my_queue21()
+{
+	//193.825
+	std::vector<int> in = {6,0,0,6,0,0,6,0,6,1,1,1,6,0,0,6,1,1,0,6,0,6,1,1,6,1,2,2,6,2,2,9,6,2,1,2,6,1,1,4,9,10,2,15,6,8,2,14,8,1,13,13,10,8,12,12,12,12,13,3,10,3,10,11,16};
+	Simulation sim = Simulation();
+	double out = sim.run(in); // 697996
+	std::cout << "final outcoume: "<< out << " " << out /3600 << std::endl;
+	// assert(out < 697996 && out > 697996);
+}
+
+void test_my_queue22()
+{
+// 	Elektrownia słoneczna (Poziom 1)
+// Kopalnia metalu (Poziom 1)
+// Kopalnia metalu (Poziom 2)
+// Elektrownia słoneczna (Poziom 2)
+// Kopalnia metalu (Poziom 3)
+// Kopalnia metalu (Poziom 4)
+// Elektrownia słoneczna (Poziom 3)
+// Kopalnia metalu (Poziom 5)
+// Kopalnia kryształu (Poziom 1)
+// Kopalnia kryształu (Poziom 2)
+// Kopalnia kryształu (Poziom 3)
+// Elektrownia słoneczna (Poziom 4)
+// Kopalnia kryształu (Poziom 4) 
+// Elektrownia słoneczna (Poziom 5) --
+// Kopalnia metalu (Poziom 6)
+// Elektrownia słoneczna (Poziom 6)
+// Kopalnia kryształu (Poziom 5)
+// Kopalnia kryształu (Poziom 6)
+// Ekstraktor deuteru (Poziom 1)
+// Elektrownia słoneczna (Poziom 7)
+// Ekstraktor deuteru (Poziom 2)
+// Ekstraktor deuteru (Poziom 3)
+// Elektrownia słoneczna (Poziom 8)
+// Ekstraktor deuteru (Poziom 4)
+// Ekstraktor deuteru (Poziom 5)
+// Ekstraktor deuteru (Poziom 6)
+// Elektrownia słoneczna (Poziom 9) ---
+// Fabryka robotów (Poziom 1)
+// Fabryka robotów (Poziom 2)
+// Laboratorium badawcze (Poziom 1)
+// Technologia energetyczna (Poziom 1)
+// Napęd spalinowy (Poziom 1)
+// Napęd spalinowy (Poziom 2)
+// Stocznia orbitalna (Poziom 1)
+// Stocznia orbitalna (Poziom 2)
+// Mały transporter
+						   //0,6,0,6,0,0,6,0,6,1,1,0,1,6,2,6,1,2,6,2,1,2,6,2,9,2,3,8,15,13,9,13,10,10,18
+	// std::vector<int> in = {6,0,0,6,0,0,6,0,1,1,1,6,1,6,0,6,1,1,2,6,2,2,6,2,2,2,6,9,9,8,15,13,13,10,10,18};
+	std::vector<int> in = {0,6,6,0,0,0,6,0,6,1,2,1,6,1,2,6,2,2,6,1,2,6,8,1,9,15,13,13,9,10,10,18};
+	Simulation sim = Simulation();
+	double out = sim.run(in); // 697996
+	std::cout << "final outcoume: "<< out << " " << out /3600 << std::endl;
+	// assert(out < 697996 && out > 697996);
+}
+//0 6 6 0 0 0 6 0 6 1 2 1 6 1 2 6 2 2 6 1 2 6 8 1 9 15 13 13 9 10 10 18 // 53.2491
 
 void run_ogame()
 {
-	test_mines_cost();
-	test_upgrade_time();
-	test_upgrade();
-	test_queues();
-	test_robot_factory_speedup();
-	test_robot_factory_not_affecting_others();
-	test_my_queue2();
-	test_my_queue3();
-	test_my_queue4();
-	test_my_queue5();
-	test_my_queue6();
-	test_my_queue7();
-	test_my_queue8();
-	test_my_queue9();
-	test_my_queue10();
-	test_my_queue11();
-	test_my_queue12();
-	test_my_queue13();
-	test_my_queue14();
-	test_my_queue15();
-	test_my_queue16();
-	test_my_queue17();
-	test_my_queue18();
-
+	// test_mines_cost();
+	// test_upgrade_time();
+	// test_upgrade();
+	// test_queues();
+	// test_robot_factory_speedup();
+	// test_robot_factory_not_affecting_others();
+	// test_my_queue2();
+	// test_my_queue3();
+	// test_my_queue4();
+	// test_my_queue5();
+	// test_my_queue6();
+	// test_my_queue7();
+	// test_my_queue8();
+	// test_my_queue9();
+	// test_my_queue10();
+	// test_my_queue11();
+	// test_my_queue12();
+	// test_my_queue13();
+	// test_my_queue14();
+	// test_my_queue15();
+	// test_my_queue16();
+	// test_my_queue17();
+	// test_my_queue18();
+	// test_my_queue19();
+	// test_my_queue20();
+	// test_my_queue21();
+	test_my_queue22();
 }
 

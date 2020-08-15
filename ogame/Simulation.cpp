@@ -13,12 +13,12 @@ Simulation::Simulation() {
 double Simulation::run(std::vector<int> queue) {
     Planet planet = Planet();
     // bool finish = false;
-    std::fstream file;
-    file.open("log.out", std::ios::out);
-    for(int i =0;i<queue.size();i++) {
-         file << queue[i] << ", ";
-    }
-    file.close();
+    // std::fstream file;
+    // file.open("log.out", std::ios::out);
+    // for(int i =0;i<queue.size();i++) {
+    //      file << queue[i] << ", ";
+    // }
+    // file.close();
     int iteration = 0;
     for (const int structure_index : queue) {
         
