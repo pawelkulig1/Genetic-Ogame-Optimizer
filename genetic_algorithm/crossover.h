@@ -1,10 +1,11 @@
 #pragma once
 
-#include "chromosome.h"
-
+#include <vector>
+// #include "chromosome.h"
+template <class T>
 class Crossover
 {
 public:
-	virtual Chromosome cross(const Chromosome &parent1, const Chromosome &parent2) =0;
-	virtual ~Crossover(){}
+	virtual std::vector<T> cross(const std::vector<T> &parent1, const std::vector<T> &parent2) = 0;
+	virtual ~Crossover(){};
 };

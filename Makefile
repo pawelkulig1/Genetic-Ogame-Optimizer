@@ -27,10 +27,6 @@ O_FILES= ogame/Building.o \
 		 ogame/Storage/MetalStorage.o \
 		 ogame/Storage/CrystalStorage.o \
 		 ogame/Storage/DeuteriumStorage.o \
-		 genetic_algorithm/basic_crossover_operator.o \
-		 genetic_algorithm/uniform_crossover_operator.o \
-		 genetic_algorithm/PMX_crossover_operator.o \
-		 genetic_algorithm/chromosome.o \
 		 genetic_algorithm/crossover.o \
 		 genetic_algorithm/utility.o \
 		 genetic_algorithm/random_generators.o \
@@ -53,9 +49,8 @@ INCLUDES=-Iogame \
 		 -Iogame/Technologies \
 		 -Iogame/Storage
 
-CXXFLAGS=--std=c++14 -Wall -g $(INCLUDES)
+CXXFLAGS=--std=c++17 -Wall -g $(INCLUDES)
 
-		
 OUT=main.o
 OUT_TESTS=test.o
 
@@ -65,6 +60,9 @@ all: main.cpp $(O_FILES)
 
 test: tests/main.cpp $(O_FILES) $(TEST_FILES)
 	$(CXX) tests/main.cpp $(O_FILES) $(TEST_FILES) -o $(OUT_TESTS) $(CXXFLAGS) $(INCLUDES)
+
+# genetic_algorithm/basic_crossover_operator.o: genetic_algorithm/basic_crossover_operator.h
+	# $(CXX) genetic_algorithm/basic_crossover_operator.h -o genetic_algorithm/basic_crossover_operator.o $(CXXFLAGS) $(INCLUDES)
 
 clean:
 	-rm ogame/*.o

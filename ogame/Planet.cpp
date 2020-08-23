@@ -121,13 +121,11 @@ int Planet::upgrade_structure(int structure_index)
     double time_to_closest_upgrade = buildQueue.getShortestTime();
     double time_to_load_resources = getTimeToLoadResources(structure_index);
 
-    // std::cout << "structure index: " << structure << " " << structure_index << " ttcu: " << time_to_closest_upgrade << " ttlr: " << time_to_load_resources << "\n";
     if (time_to_load_resources == -1 && buildQueue.isEmpty(-1))
     {
         return 3; //cannot build because resources won't be able to load in finite time
     }
-    //bool constructed = false;
-    // std::cout << "buildQueue: " << buildQueue.getTime(0) << " " << buildQueue.getTime(1) << " " << buildQueue.getTime(2) << std::endl;
+    
     while(!buildQueue.isEmpty(queue_index) || !(getTimeToLoadResources(structure_index) == 0))
     {
         if (getTimeToLoadResources(structure_index) == -1 && buildQueue.isEmpty(-1)) {
@@ -137,9 +135,7 @@ int Planet::upgrade_structure(int structure_index)
         // std::cout<<"time to closest upgrade: "<< time_to_closest_upgrade << std::endl;
         if (time_to_closest_upgrade <= 0 && !buildQueue.isEmpty(buildQueue.getFinishedIndex()))
         {
-            // std::cout << 
             buildQueue.getFinishedBuilding()->operator++();
-            //constructed = true;
             resources.setEnergy(calculatePlanetEnergy());
             calculateProductionFactor();
 
@@ -161,13 +157,9 @@ int Planet::upgrade_structure(int structure_index)
         {
             time_needed == -1;
         }
-        // std::cout << " ttl: " << time_to_load_resources << " closest upgrade: " << time_to_closest_upgrade << " needed: " << time_needed << std::endl;
-
         passTime(time_needed);
     }
-    // std::cout << "counter: " << counter++ << std::endl;
-    //now when queue is empty, we can build
-    // std::cout << productionFactor << std::endl;
+
     //check if meets requirements
     if (structure->get_requirements().size() > 0)
     {
@@ -208,8 +200,6 @@ int Planet::upgrade_structure(int structure_index)
     {
         buildQueue.lockQueue(globals::QueueIndex::SHIP, get_construction_time(structure_index));
     }
-
-
     return 0;
 }
 
@@ -256,7 +246,6 @@ void Planet::finish_queues()
 
 void Planet::calculateProductionFactor()
 {
-    // std::cout << "calculateProductionFactor" << std::endl;
     if (metalMine.getEnergyConsumption().at(3) +
         crystalMine.getEnergyConsumption().at(3) +
         deuteriumMine.getEnergyConsumption().at(3) == 0)
@@ -289,7 +278,6 @@ double Planet::getTimeToLoadResources(int structure_index)
     Resources upgrade_cost = structure->getUpgradeCost();
     //case when the same object is in queue and is going to be built, this means we have to calculate cost as if it was built already but production not.
     if (buildQueue.at(queue_index) == structure && queue_index != globals::QueueIndex::SHIP) {
-        // std::cout << "in queue the same object" << std::endl;
         const int lvl = static_cast<Structure *>(structure)->getLvl();
         static_cast<Structure* >(structure)->setLvl(lvl + 1);
         upgrade_cost = structure->getUpgradeCost();
@@ -299,7 +287,6 @@ double Planet::getTimeToLoadResources(int structure_index)
     Resources extraction = getPlanetExtraction();
     cost_delta = resources - upgrade_cost;
 
-    //std::cout << structure_index  << " " << cost_delta << " " << extraction << std::endl;
     if (cost_delta.at(2) < 0 && (extraction.at(2) == 0 || resources.at(2) + abs(cost_delta.at(2)) > deuterium_storage.getStorageCapacity().at(2))) {
         return -1;
     }

@@ -19,7 +19,7 @@ namespace globals {
         //TECHNOLOGIES
         ASTROPHYSICS         = 11,
         ESPIONAGE_TECHNOLOGY = 12,
-        COMBUSTION_DRIVE     = 13, //tu
+        COMBUSTION_DRIVE     = 13,
         IMPULSE_DRIVE        = 14,
         ENERGY_TECHNOLOGY    = 15,
 
