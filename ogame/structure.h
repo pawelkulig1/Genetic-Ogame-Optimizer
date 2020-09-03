@@ -5,7 +5,7 @@ class Structure : public GameObject
 {
 protected:
 	int lvl;
-	const double costRatio;
+	double costRatio;
 public:
 	virtual ~Structure();
 	Structure(const Resources &defaultCost, double costRatio = 2);

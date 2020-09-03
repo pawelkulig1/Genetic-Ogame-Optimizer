@@ -4,5 +4,5 @@
 Shipyard::Shipyard(Resources default_cost) : Building(default_cost)
 {
 	name = "Shipyard";
-	m_requirements.push_back(std::make_pair(globals::Upgradables::ROBOT_FACTORY, 2));
+	m_requirements.push_back(std::make_pair(static_cast<int>(globals::Upgradables::ROBOT_FACTORY), 2));
 }

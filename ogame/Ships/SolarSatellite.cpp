@@ -5,7 +5,7 @@
 SolarSatellite::SolarSatellite(Resources default_cost): Ship(default_cost)
 {
 	name = "Solar Satellite";
-	m_requirements.push_back(std::make_pair(globals::Upgradables::SHIPYARD, 1));
+	m_requirements.push_back(std::make_pair(static_cast<int>(globals::Upgradables::SHIPYARD), 1));
 }
 
 Resources SolarSatellite::getProductionPerHour(int planet_temperature) const 

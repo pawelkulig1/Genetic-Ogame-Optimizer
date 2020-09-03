@@ -1,7 +1,8 @@
 #pragma once
 
-namespace globals {
-    enum Upgradables
+namespace globals { 
+
+    enum class Upgradables
     {
         //BUILDINGS
         METAL_MINE        = 0,
@@ -31,7 +32,7 @@ namespace globals {
         SIZE
     };
 
-    enum QueueIndex
+    enum class QueueIndex
     {
         NONE 	   = -1,
         BUILDING   =  0,
@@ -40,5 +41,5 @@ namespace globals {
         END
     };
 
-    static constexpr int SAFETY_GUARD = 1;
+    inline constexpr int SAFETY_GUARD = 1;
 }

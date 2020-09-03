@@ -31,7 +31,7 @@ void GameObject::setName(std::string name) {
 
 globals::QueueIndex GameObject::getQueueIndex() const
 {	
-	assert (queue_index >= 0);
+	assert (static_cast<int>(queue_index) >= 0);
 	return queue_index;
 }
 

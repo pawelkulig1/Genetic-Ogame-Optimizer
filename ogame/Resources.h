@@ -7,8 +7,6 @@
 
 #include <iostream>
 
-#pragma once
-
 class Resources {
 public:
 	using data_type = double;
@@ -20,7 +18,7 @@ private:
 
 public:
     Resources::data_type getEnergy() const;
-	
+
     void setEnergy(data_type energy);
 
     Resources();

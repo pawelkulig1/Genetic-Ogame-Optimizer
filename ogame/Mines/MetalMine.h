@@ -17,6 +17,7 @@ public:
               const int energyRatio = 10);
 
 	const Resources getProductionPerHour() const override;
+    // MetalMine(const MetalMine&& metalMine);
 };
 
 

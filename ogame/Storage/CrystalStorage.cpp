@@ -8,7 +8,8 @@ CrystalStorage::CrystalStorage(const Resources& defaultCost): Building(defaultCo
 Resources CrystalStorage::getStorageCapacity() const
 {
     if (lvl > max_level) {
-        throw(std::runtime_error("Crystal Storage max level is 20!"));
+        // throw(std::runtime_error("Crystal Storage max level is 20!"));
+        return Resources(0, m_capacity[max_level], 0);
     }
     return Resources(0, m_capacity[lvl], 0);
 }

@@ -9,7 +9,7 @@ class Utility
 {
 	using chromosome = std::vector<int>;
 	int m_population_size = 50;
-	int m_default_chromosome_size = 200;
+	unsigned int  m_default_chromosome_size = 50;
 	Crossover<int> *m_crossover_strategy;
 	std::function<double (std::vector<int>)> m_fitness_function;
 	std::vector<std::pair<chromosome, double> > m_chromosomes;
@@ -20,6 +20,7 @@ class Utility
 	double prune_rate = 0.1;
 	double add_rate = 0.1;
 	double elite_ratio = 0.1;
+	double m_tournament_size = 30;
 
 	double dynamic_mutation_rate = mutation_rate;
 	double dynamic_swap_rate = swap_rate;
@@ -43,7 +44,7 @@ class Utility
 
 public:
 	chromosome generate_random_chromosome(int size);
-	chromosome generate_random_possible_chromosome(int size);
+	chromosome generate_random_possible_chromosome(size_t size);
 	void prepare_initial_population();
 	void set_crossover_strategy(Crossover<int> &crossover_strategy) {m_crossover_strategy = &crossover_strategy;}
 	void set_population_size(int size) {m_population_size = size;}

@@ -16,7 +16,7 @@ private:
     Planet m_planet;
 public:
     Simulation();
-    double run(std::vector<int> queue);
+    std::vector<double> run(std::vector<int> queue);
 };
 
 

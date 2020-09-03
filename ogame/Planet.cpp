@@ -7,72 +7,72 @@
 #include "common_includes.h"
 #include <algorithm>
 #include <iostream>
+#include <functional>
+#include <memory>
+#include "GameObject.h"
+#include "DeuteriumMine.h"
+#include "SolarPlant.h"
+#include "FusionPlant.h"
+#include "CrystalMine.h"
+#include "MetalMine.h"
+#include "Laboratory.h"
+#include "RobotFactory.h"
+#include "Shipyard.h"
+#include "MetalStorage.h"
+#include "CrystalStorage.h"
+#include "DeuteriumStorage.h"
+
+#include "Astrophysics.h"
+#include "EspionageTechnology.h"
+#include "CombustionDrive.h"
+#include "ImpulseDrive.h"
+#include "EnergyTechnology.h"
+
+#include "SolarSatellite.h"
+#include "ColonizationShip.h"
+#include "SmallCargo.h"
+
 
 Planet::Planet() : planet_temperature(75),
-                   metalMine(MetalMine()),
-                   crystalMine(CrystalMine()),
-                   deuteriumMine(DeuteriumMine(75)),
-                   solarPlant(SolarPlant()),
-                   fusion_plant(FusionPlant()),
-                   laboratory(Laboratory()),
-                   robot_factory(RobotFactory()),
-                   shipyard(Shipyard()),
-                   metal_storage(MetalStorage()),
-                   crystal_storage(CrystalStorage()),
-                   deuterium_storage(DeuteriumStorage()),
-
-                   astrophysics(Astrophysics()),
-                   espionage_technology(EspionageTechnology()),
-                   combustion_drive(CombustionDrive()),
-                   impulse_drive(ImpulseDrive()),
-                   energy_technology(EnergyTechnology()),
-
-                   solar_satellite(SolarSatellite()),
-                   colonization_ship(ColonizationShip()),
-                   small_cargo(SmallCargo()),
-
                    buildQueue(BuildQueue()),
                    resources(Resources(500, 500, 0, 0)),
-                   productionFactor(1) 
+                   productionFactor(1)
 {
     construct_structure_list();
-}
-
-GameObject *Planet::get_structure(int index)
-{
-    if (index < globals::Upgradables::SIZE)
-        return structure_list[index];
-    else
-        throw(std::runtime_error("Planet::get_structure incorrect index!"));
 }
 
 void Planet::construct_structure_list()
 {
     int i = 0;
-    structure_list[i++] = &metalMine; //0
-    structure_list[i++] = &crystalMine;
-    structure_list[i++] = &deuteriumMine;
-    structure_list[i++] = &metal_storage;
-    structure_list[i++] = &crystal_storage;
-    structure_list[i++] = &deuterium_storage;
-    structure_list[i++] = &solarPlant;
-    structure_list[i++] = &fusion_plant;
-    structure_list[i++] = &laboratory;
-    structure_list[i++] = &robot_factory;
-    structure_list[i++] = &shipyard;
-    
-    structure_list[i++] = &astrophysics;
-    structure_list[i++] = &espionage_technology;
-    structure_list[i++] = &combustion_drive;
-    structure_list[i++] = &impulse_drive;
-    structure_list[i++] = &energy_technology;
+    // MetalMine mm = MetalMine();
+    structure_list[i++] = std::make_unique<MetalMine>(MetalMine());//metalMine; //0
+    structure_list[i++] = std::make_unique<CrystalMine>(CrystalMine());
+    structure_list[i++] = std::make_unique<DeuteriumMine>(DeuteriumMine());
+    structure_list[i++] = std::make_unique<MetalStorage>(MetalStorage());
+    structure_list[i++] = std::make_unique<CrystalStorage>(CrystalStorage());
+    structure_list[i++] = std::make_unique<DeuteriumStorage>(DeuteriumStorage());
+    structure_list[i++] = std::make_unique<SolarPlant>(SolarPlant());
+    structure_list[i++] = std::make_unique<FusionPlant>(FusionPlant());
+    structure_list[i++] = std::make_unique<Laboratory>(Laboratory());
+    structure_list[i++] = std::make_unique<RobotFactory>(RobotFactory());
+    structure_list[i++] = std::make_unique<Shipyard>(Shipyard());
 
-    structure_list[i++] = &solar_satellite;
-    structure_list[i++] = &colonization_ship;
-    structure_list[i++] = &small_cargo;
+    structure_list[i++] = std::make_unique<Astrophysics>(Astrophysics());
+    structure_list[i++] = std::make_unique<EspionageTechnology>(EspionageTechnology());
+    structure_list[i++] = std::make_unique<CombustionDrive>(CombustionDrive());
+    structure_list[i++] = std::make_unique<ImpulseDrive>(ImpulseDrive());
+    structure_list[i++] = std::make_unique<EnergyTechnology>(EnergyTechnology());
+
+    structure_list[i++] = std::make_unique<SolarSatellite>(SolarSatellite());
+    structure_list[i++] = std::make_unique<ColonizationShip>(ColonizationShip());
+    structure_list[i++] = std::make_unique<SmallCargo>(SmallCargo());
 }
 
 void Planet::passTime(double seconds) {
+    auto metal_storage = get_structure<MetalStorage* >(globals::Upgradables::METAL_STORAGE);// _list[];
+    auto crystal_storage = get_structure<CrystalStorage*>(globals::Upgradables::CRYSTAL_STORAGE);
+    auto deuterium_storage = get_structure<DeuteriumStorage*>(globals::Upgradables::DEUTERIUM_STORAGE);
+
     seconds = seconds + globals::SAFETY_GUARD;
     Resources current_extraction = getPlanetExtraction();
     Resources new_resources = Resources(
@@ -81,18 +81,20 @@ void Planet::passTime(double seconds) {
         resources.at(2) + (current_extraction.at(2) / 3600) * seconds
         );
 
-    if (metal_storage.getStorageCapacity().getMetal() < new_resources.getMetal()){
-        new_resources.setMetal(metal_storage.getStorageCapacity().getMetal());
+    if (metal_storage->getStorageCapacity().getMetal() < new_resources.getMetal()){
+        new_resources.setMetal(metal_storage->getStorageCapacity().getMetal());
     }
 
-    if (crystal_storage.getStorageCapacity().getCrystal() < new_resources.getCrystal()){
-        new_resources.setCrystal(crystal_storage.getStorageCapacity().getCrystal());
+    if (crystal_storage->getStorageCapacity().getCrystal() < new_resources.getCrystal()){
+        new_resources.setCrystal(crystal_storage->getStorageCapacity().getCrystal());
     }
 
-    if (deuterium_storage.getStorageCapacity().getDeuterium() < new_resources.getDeuterium()){
-        new_resources.setDeuterium(deuterium_storage.getStorageCapacity().getDeuterium());
+    if (deuterium_storage->getStorageCapacity().getDeuterium() < new_resources.getDeuterium()){
+        new_resources.setDeuterium(deuterium_storage->getStorageCapacity().getDeuterium());
     }
 
+    Resources delta = new_resources - resources;
+    loaded_resources += delta.getMetal() + delta.getCrystal() + delta.getDeuterium();
     resources.setMetal(new_resources.getMetal());
     resources.setCrystal(new_resources.getCrystal());
     resources.setDeuterium(new_resources.getDeuterium());
@@ -103,21 +105,21 @@ void Planet::passTime(double seconds) {
 
 int Planet::upgrade_structure(int structure_index)
 {
-    GameObject* structure = structure_list[structure_index];
+    auto structure = get_structure<GameObject*>(structure_index);//structure_list[structure_index];
     Resources upgradeCost = structure->getUpgradeCost();
 
-    if (!can_upgrade_laboratory && structure_index == globals::Upgradables::LABORATORY)
+    if (!can_upgrade_laboratory && structure_index == static_cast<int>(globals::Upgradables::LABORATORY))
     {
-        buildQueue.lockQueue(globals::QueueIndex::BUILDING, buildQueue.getTime(globals::QueueIndex::TECHNOLOGY));
+        buildQueue.lockQueue(static_cast<int>(globals::QueueIndex::BUILDING), buildQueue.getTime(static_cast<int>(globals::QueueIndex::TECHNOLOGY)));
     }
 
-    if (!can_upgrade_shipyard && structure_index == globals::Upgradables::SHIPYARD)
+    if (!can_upgrade_shipyard && structure_index == static_cast<int>(globals::Upgradables::SHIPYARD))
     {
-        buildQueue.lockQueue(globals::QueueIndex::BUILDING, buildQueue.getTime(globals::QueueIndex::SHIP));
+        buildQueue.lockQueue(static_cast<int>(globals::QueueIndex::BUILDING), buildQueue.getTime(static_cast<int>(globals::QueueIndex::SHIP)));
     }
-    
+
     double construction_time = get_construction_time(structure_index);
-    const int queue_index = structure->getQueueIndex();
+    const int queue_index = static_cast<int>(structure->getQueueIndex());
     double time_to_closest_upgrade = buildQueue.getShortestTime();
     double time_to_load_resources = getTimeToLoadResources(structure_index);
 
@@ -125,7 +127,7 @@ int Planet::upgrade_structure(int structure_index)
     {
         return 3; //cannot build because resources won't be able to load in finite time
     }
-    
+
     while(!buildQueue.isEmpty(queue_index) || !(getTimeToLoadResources(structure_index) == 0))
     {
         if (getTimeToLoadResources(structure_index) == -1 && buildQueue.isEmpty(-1)) {
@@ -140,7 +142,7 @@ int Planet::upgrade_structure(int structure_index)
             calculateProductionFactor();
 
             //if two times in row these needs to be updated once again
-            upgradeCost = structure->getUpgradeCost(); 
+            upgradeCost = structure->getUpgradeCost();
             construction_time = get_construction_time(structure_index);
 
             buildQueue.clearQueue(buildQueue.getFinishedIndex());
@@ -155,7 +157,7 @@ int Planet::upgrade_structure(int structure_index)
         }
         if (time_to_closest_upgrade == -1)
         {
-            time_needed == -1;
+            time_needed = -1;
         }
         passTime(time_needed);
     }
@@ -165,7 +167,8 @@ int Planet::upgrade_structure(int structure_index)
     {
         for (GameObject::Requirements req: structure->get_requirements())
         {
-            if (dynamic_cast<Structure*>(structure_list[req.first])->getLvl() < req.second)
+            //if (dynamic_cast<Structure*>(structure_list[req.first])->getLvl() < req.second)
+            if (get_structure<Structure*>(req.first)->getLvl() < req.second)
             {
                 return 2; //not meeting requirements
             }
@@ -175,9 +178,10 @@ int Planet::upgrade_structure(int structure_index)
     if (!buildQueue.addToQueue(queue_index, structure, construction_time)) {
         throw(std::runtime_error("queue not empty when upgrading!"));
     }
-    
+
     if (resources >= upgradeCost) {
         resources = resources - upgradeCost;
+        points += upgradeCost.getMetal() + upgradeCost.getCrystal() + upgradeCost.getDeuterium();
     }
     else {
         throw(std::runtime_error("Not enough resources when upgrading!"));
@@ -189,24 +193,24 @@ int Planet::upgrade_structure(int structure_index)
     //3. ships if shipyard
     //4. shipyard if ship
 
-    can_upgrade_laboratory = buildQueue.isEmpty(globals::QueueIndex::TECHNOLOGY);
-    can_upgrade_shipyard = buildQueue.isEmpty(globals::QueueIndex::SHIP);
-    if (structure_index == globals::Upgradables::LABORATORY)
+    can_upgrade_laboratory = buildQueue.isEmpty(static_cast<int>(globals::QueueIndex::TECHNOLOGY));
+    can_upgrade_shipyard = buildQueue.isEmpty(static_cast<int>(globals::QueueIndex::SHIP));
+    if (structure_index == static_cast<int>(globals::Upgradables::LABORATORY))
     {
-        buildQueue.lockQueue(globals::QueueIndex::TECHNOLOGY, get_construction_time(structure_index));
+        buildQueue.lockQueue(static_cast<int>(globals::QueueIndex::TECHNOLOGY), get_construction_time(structure_index));
     }
 
-    if (structure_index == globals::Upgradables::SHIPYARD)
+    if (structure_index == static_cast<int>(globals::Upgradables::SHIPYARD))
     {
-        buildQueue.lockQueue(globals::QueueIndex::SHIP, get_construction_time(structure_index));
+        buildQueue.lockQueue(static_cast<int>(globals::QueueIndex::SHIP), get_construction_time(structure_index));
     }
     return 0;
 }
 
 double Planet::get_construction_time(int structure_index) const
 {
-    GameObject *obj = structure_list[structure_index];
-    const int queue_index = obj->getQueueIndex();
+    GameObject const * obj = get_structure<GameObject*>(structure_index);//structure_list[structure_index];
+    const int queue_index = static_cast<int>(obj->getQueueIndex());
     if (queue_index == 0)
     {
         return obj->getConstructionTime(
@@ -222,7 +226,7 @@ double Planet::get_construction_time(int structure_index) const
         return obj->getConstructionTime(
             get_shipyard_level(), get_nanite_factory_level());
     }
-    else 
+    else
     {
         throw(std::runtime_error("get_construction_time queue index above 2"));
     }
@@ -246,9 +250,12 @@ void Planet::finish_queues()
 
 void Planet::calculateProductionFactor()
 {
-    if (metalMine.getEnergyConsumption().at(3) +
-        crystalMine.getEnergyConsumption().at(3) +
-        deuteriumMine.getEnergyConsumption().at(3) == 0)
+    auto metalMine = get_structure<MetalMine*>(globals::Upgradables::METAL_MINE);
+    auto crystalMine = get_structure<CrystalMine*>(globals::Upgradables::CRYSTAL_MINE);
+    auto deuteriumMine = get_structure<DeuteriumMine*>(globals::Upgradables::DEUTERIUM_MINE);
+    if (metalMine->getEnergyConsumption().at(3) +
+        crystalMine->getEnergyConsumption().at(3) +
+        deuteriumMine->getEnergyConsumption().at(3) == 0)
     {
         productionFactor = 1;
         return;
@@ -257,9 +264,9 @@ void Planet::calculateProductionFactor()
     productionFactor = (
            static_cast<double>(getPlanetEnergyProduction().at(3)) /
            (
-               metalMine.getEnergyConsumption().at(3) +
-               crystalMine.getEnergyConsumption().at(3) +
-               deuteriumMine.getEnergyConsumption().at(3)
+               metalMine->getEnergyConsumption().at(3) +
+               crystalMine->getEnergyConsumption().at(3) +
+               deuteriumMine->getEnergyConsumption().at(3)
            ));
 
     if (productionFactor > 1)
@@ -273,11 +280,11 @@ double Planet::getProductionFactor() const {
 
 double Planet::getTimeToLoadResources(int structure_index)
 {
-    GameObject *structure = get_structure(structure_index);
-    const int queue_index = structure->getQueueIndex();
+    GameObject *structure = get_structure<GameObject*>(structure_index);
+    const int queue_index = static_cast<int>(structure->getQueueIndex());
     Resources upgrade_cost = structure->getUpgradeCost();
     //case when the same object is in queue and is going to be built, this means we have to calculate cost as if it was built already but production not.
-    if (buildQueue.at(queue_index) == structure && queue_index != globals::QueueIndex::SHIP) {
+    if (buildQueue.at(queue_index) == structure && queue_index != static_cast<int>(globals::QueueIndex::SHIP)) {
         const int lvl = static_cast<Structure *>(structure)->getLvl();
         static_cast<Structure* >(structure)->setLvl(lvl + 1);
         upgrade_cost = structure->getUpgradeCost();
@@ -287,15 +294,19 @@ double Planet::getTimeToLoadResources(int structure_index)
     Resources extraction = getPlanetExtraction();
     cost_delta = resources - upgrade_cost;
 
-    if (cost_delta.at(2) < 0 && (extraction.at(2) == 0 || resources.at(2) + abs(cost_delta.at(2)) > deuterium_storage.getStorageCapacity().at(2))) {
-        return -1;
-    }
-    
-    if (cost_delta.at(1) < 0 && (extraction.at(1) == 0 || resources.at(1) + abs(cost_delta.at(1)) > crystal_storage.getStorageCapacity().at(1))) {
+    auto metal_storage = get_structure<MetalStorage*>(globals::Upgradables::METAL_STORAGE);
+    auto crystal_storage = get_structure<CrystalStorage*>(globals::Upgradables::CRYSTAL_STORAGE);
+    auto deuterium_storage = get_structure<DeuteriumStorage*>(globals::Upgradables::DEUTERIUM_STORAGE);
+
+    if (cost_delta.at(2) < 0 && (extraction.at(2) == 0 || resources.at(2) + abs(cost_delta.at(2)) > deuterium_storage->getStorageCapacity().at(2))) {
         return -1;
     }
 
-    if (cost_delta.at(0) < 0 && (extraction.at(0) == 0 || resources.at(0) + abs(cost_delta.at(0)) > metal_storage.getStorageCapacity().at(0))) {
+    if (cost_delta.at(1) < 0 && (extraction.at(1) == 0 || resources.at(1) + abs(cost_delta.at(1)) > crystal_storage->getStorageCapacity().at(1))) {
+        return -1;
+    }
+
+    if (cost_delta.at(0) < 0 && (extraction.at(0) == 0 || resources.at(0) + abs(cost_delta.at(0)) > metal_storage->getStorageCapacity().at(0))) {
         return -1;
     }
 
@@ -311,29 +322,38 @@ double Planet::getTimeToLoadResources(int structure_index)
 }
 
 Resources Planet::getPlanetExtraction() const {
-    double fusion_consumption = fusion_plant.getProductionPerHour(energy_technology.getLvl()).at(2);
-    if (deuteriumMine.getProductionPerHour().at(2) * static_cast<double>(productionFactor) < fusion_plant.getProductionPerHour(energy_technology.getLvl()).at(2))
+    auto fusion_plant = get_structure<FusionPlant*>(globals::Upgradables::FUSION_PLANT);
+    auto energy_technology = get_structure<EnergyTechnology*>(globals::Upgradables::ENERGY_TECHNOLOGY);
+    auto metalMine = get_structure<MetalMine*>(globals::Upgradables::METAL_MINE);
+    auto crystalMine = get_structure<CrystalMine*>(globals::Upgradables::CRYSTAL_MINE);
+    auto deuteriumMine = get_structure<DeuteriumMine*>(globals::Upgradables::DEUTERIUM_MINE);
+    auto metal_storage = get_structure<MetalStorage*>(globals::Upgradables::METAL_STORAGE);
+    auto crystal_storage = get_structure<CrystalStorage*>(globals::Upgradables::CRYSTAL_STORAGE);
+    auto deuterium_storage = get_structure<DeuteriumStorage*>(globals::Upgradables::DEUTERIUM_STORAGE);
+
+    double fusion_consumption = fusion_plant->getProductionPerHour(energy_technology->getLvl()).at(2);
+    if (deuteriumMine->getProductionPerHour().at(2) * static_cast<double>(productionFactor) < fusion_plant->getProductionPerHour(energy_technology->getLvl()).at(2))
     {
         fusion_consumption = 0;
     }
 
     Resources temp = Resources(
-            (metalMine.getProductionPerHour() * static_cast<double>(productionFactor) + metalMine.getDefaultProductionPerHour()).at(0),
-            (crystalMine.getProductionPerHour() * static_cast<double>(productionFactor) + crystalMine.getDefaultProductionPerHour()).at(1),
-            (deuteriumMine.getProductionPerHour() * static_cast<double>(productionFactor) + 
-                 deuteriumMine.getDefaultProductionPerHour()).at(2) - 
+            (metalMine->getProductionPerHour() * static_cast<double>(productionFactor) + metalMine->getDefaultProductionPerHour()).at(0),
+            (crystalMine->getProductionPerHour() * static_cast<double>(productionFactor) + crystalMine->getDefaultProductionPerHour()).at(1),
+            (deuteriumMine->getProductionPerHour() * static_cast<double>(productionFactor) +
+                 deuteriumMine->getDefaultProductionPerHour()).at(2) -
                 fusion_consumption,
             calculatePlanetEnergy());
-    
-    if (metal_storage.getStorageCapacity().getMetal() <= getResources().getMetal()) {
+
+    if (metal_storage->getStorageCapacity().getMetal() <= getResources().getMetal()) {
         temp.setMetal(0);
     }
 
-    if (crystal_storage.getStorageCapacity().getCrystal() <= getResources().getCrystal()) {
+    if (crystal_storage->getStorageCapacity().getCrystal() <= getResources().getCrystal()) {
         temp.setCrystal(0);
     }
 
-    if (deuterium_storage.getStorageCapacity().getDeuterium() <= getResources().getDeuterium()) {
+    if (deuterium_storage->getStorageCapacity().getDeuterium() <= getResources().getDeuterium()) {
         temp.setDeuterium(0);
     }
     return temp;
@@ -345,36 +365,49 @@ Resources Planet::getResources() const {
 
 Resources Planet::getPlanetEnergyProduction() const
 {
-		
-    Resources fusion_additional_energy = Resources(0, 0, 0, fusion_plant.getProductionPerHour(energy_technology.getLvl()).at(3));
-    if (deuteriumMine.getDefaultProductionPerHour().at(2) < fusion_plant.getProductionPerHour(energy_technology.getLvl()).at(2))
+    auto fusion_plant = get_structure<FusionPlant*>(globals::Upgradables::FUSION_PLANT);
+    auto energy_technology = get_structure<EnergyTechnology*>(globals::Upgradables::ENERGY_TECHNOLOGY);
+    auto deuteriumMine = get_structure<DeuteriumMine*>(globals::Upgradables::DEUTERIUM_MINE);
+    auto solar_satellite = get_structure<SolarSatellite*>(globals::Upgradables::SOLAR_SATELLITE);
+    auto solarPlant = get_structure<SolarPlant*>(globals::Upgradables::SOLAR_PLANT);
+
+    Resources fusion_additional_energy = Resources(0, 0, 0, fusion_plant->getProductionPerHour(energy_technology->getLvl()).at(3));
+    if (deuteriumMine->getDefaultProductionPerHour().at(2) < fusion_plant->getProductionPerHour(energy_technology->getLvl()).at(2))
     {
         fusion_additional_energy.setEnergy(0);
     }
 
-    return solarPlant.getProductionPerHour()
+    return solarPlant->getProductionPerHour()
             + fusion_additional_energy
-            + solar_satellite.getProductionPerHour(planet_temperature);
+            + solar_satellite->getProductionPerHour(planet_temperature);
 
 }
 int Planet::calculatePlanetEnergy() const {
-    Resources fusion_additional_energy = Resources(0, 0, 0, fusion_plant.getProductionPerHour(energy_technology.getLvl()).at(3));
-    if (deuteriumMine.getDefaultProductionPerHour().at(2) < fusion_plant.getProductionPerHour(energy_technology.getLvl()).at(2))
+    auto fusion_plant = get_structure<FusionPlant*>(globals::Upgradables::FUSION_PLANT);
+    auto energy_technology = get_structure<EnergyTechnology*>(globals::Upgradables::ENERGY_TECHNOLOGY);
+    auto metalMine = get_structure<MetalMine*>(globals::Upgradables::METAL_MINE);
+    auto crystalMine = get_structure<CrystalMine*>(globals::Upgradables::CRYSTAL_MINE);
+    auto deuteriumMine = get_structure<DeuteriumMine*>(globals::Upgradables::DEUTERIUM_MINE);
+    auto solarPlant = get_structure<SolarPlant*>(globals::Upgradables::SOLAR_PLANT);
+    auto solar_satellite = get_structure<SolarSatellite*>(globals::Upgradables::SOLAR_SATELLITE);
+
+    Resources fusion_additional_energy = Resources(0, 0, 0, fusion_plant->getProductionPerHour(energy_technology->getLvl()).at(3));
+    if (deuteriumMine->getDefaultProductionPerHour().at(2) < fusion_plant->getProductionPerHour(energy_technology->getLvl()).at(2))
     {
         fusion_additional_energy.setEnergy(0);
     }
 
-    return (solarPlant.getProductionPerHour() 
+    return (solarPlant->getProductionPerHour()
             + fusion_additional_energy
-            + solar_satellite.getProductionPerHour(planet_temperature)
-            - metalMine.getEnergyConsumption()
-            - crystalMine.getEnergyConsumption()
-            - deuteriumMine.getEnergyConsumption()).at(3);
+            + solar_satellite->getProductionPerHour(planet_temperature)
+            - metalMine->getEnergyConsumption()
+            - crystalMine->getEnergyConsumption()
+            - deuteriumMine->getEnergyConsumption()).at(3);
 }
 
 int Planet::get_robot_factory_level() const
 {
-    return robot_factory.getLvl();
+    return get_structure<RobotFactory*>(globals::Upgradables::ROBOT_FACTORY)->getLvl();
 }
 
 int Planet::get_nanite_factory_level() const
@@ -389,15 +422,25 @@ int Planet::get_planet_temperature() const
 
 int Planet::get_shipyard_level() const
 {
-    return shipyard.getLvl();
+    return get_structure<Shipyard*>(globals::Upgradables::SHIPYARD)->getLvl();
 }
 
 int Planet::get_laboratory_level() const
 {
-    return laboratory.getLvl();
+    return get_structure<Laboratory*>(globals::Upgradables::LABORATORY)->getLvl();
 }
 
 double Planet::getTime() const
 {
     return time;
+}
+
+double Planet::getPoints() const
+{
+    return points;
+}
+
+double Planet::getLoadedResources() const
+{
+    return loaded_resources;
 }

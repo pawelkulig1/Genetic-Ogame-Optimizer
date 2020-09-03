@@ -26,8 +26,17 @@ int main() {
 double run_simulation(std::vector<int> chromosome)
 {
 	Simulation sim = Simulation();
-	auto score = 1.0/sim.run(chromosome);
-	return score;
+	auto out = sim.run(chromosome);
+	double time = out[0];
+	double points = out[1];
+	double loaded_resources = out[2];
+	
+	
+	if (time == 0 || time > 1000 * 3600)
+	{
+		return 1e-100;
+	}
+	return loaded_resources;
 }
 
 std::vector<globals::Upgradables> example_queue()

@@ -10,15 +10,8 @@ Simulation::Simulation() {
     time = 0;
 }
 
-double Simulation::run(std::vector<int> queue) {
+std::vector<double> Simulation::run(std::vector<int> queue) {
     Planet planet = Planet();
-    // bool finish = false;
-    // std::fstream file;
-    // file.open("log.out", std::ios::out);
-    // for(int i =0;i<queue.size();i++) {
-    //      file << queue[i] << ", ";
-    // }
-    // file.close();
     int iteration = 0;
     for (const int structure_index : queue) {
         
@@ -30,14 +23,14 @@ double Simulation::run(std::vector<int> queue) {
         }
         else if (status == 2) {
 			// std::cout << "status 2" << std::endl;
-            return 1e100;
+            return {0, 0, 0};
         }
         else if (status == 3) {
 			// std::cout << "status 3" << std::endl;
-            return 1e100;
+            return {0, 0, 0};
         }
     }
     planet.finish_queues();
 
-    return planet.getTime();
+    return {planet.getTime(), planet.getPoints(), planet.getLoadedResources()};
 }

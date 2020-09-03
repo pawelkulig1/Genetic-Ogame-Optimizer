@@ -28,6 +28,8 @@ class CrystalStorage: public Building
         372.785 *   1e6,
         683.385 *   1e6,
         1252.785*   1e6
+        //2296.600*   1e6,
+
     };
 
 public:

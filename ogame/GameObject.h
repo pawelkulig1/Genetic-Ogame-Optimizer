@@ -8,7 +8,7 @@ class GameObject
 public:
 	using Requirements = std::pair<int, int>;
 protected:
-	const Resources defaultCost;
+	Resources defaultCost;
 	std::string name;
 	std::list<Requirements> m_requirements;
 	globals::QueueIndex queue_index;

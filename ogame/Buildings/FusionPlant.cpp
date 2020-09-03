@@ -11,7 +11,7 @@ FusionPlant::FusionPlant(Resources default_cost,
 {
 	name = "Fusion Plant";
 	m_production_ratio = productionRatio;
-	m_requirements.push_back(std::make_pair(globals::Upgradables::DEUTERIUM_MINE, 5));
+	m_requirements.push_back(std::make_pair(static_cast<int>(globals::Upgradables::DEUTERIUM_MINE), 5));
 }
 
 Resources FusionPlant::getProductionPerHour(int energetic_technology_lvl) const

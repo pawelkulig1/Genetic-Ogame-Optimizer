@@ -91,7 +91,7 @@ int BuildQueue::getFinishedIndex() const
     {
         return finished_index;
     }
-    return globals::QueueIndex::NONE;
+    return static_cast<int>(globals::QueueIndex::NONE);
 }
 
 bool BuildQueue::addToQueue(int index, GameObject *obj, double construction_time)
@@ -143,7 +143,7 @@ double BuildQueue::getTime(int index)
 bool BuildQueue::verify_index(int index) const
 {
     assert (index >= 0);
-    assert (index < globals::QueueIndex::END);
+    assert (index < static_cast<int>(globals::QueueIndex::END));
     return true;
 }
 

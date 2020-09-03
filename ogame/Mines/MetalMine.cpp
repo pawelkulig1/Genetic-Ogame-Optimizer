@@ -6,13 +6,13 @@
 #include <math.h>
 
 MetalMine::MetalMine(const Resources &defaultCost,
-	   			     const double costRatio, 
+	   			     const double costRatio,
 					 const Resources &defaultProductionPerHour,
-                     int productionRatio, 
-					 int energyRatio) : 
-			Mine(defaultCost, 
+                     int productionRatio,
+					 int energyRatio) :
+			Mine(defaultCost,
 				 costRatio,
-                 defaultProductionPerHour, 
+                 defaultProductionPerHour,
 				 productionRatio,
                  energyRatio)
 {
@@ -23,4 +23,3 @@ const Resources MetalMine::getProductionPerHour() const
 {
 	return Resources(productionRatio * lvl * pow(1.1, lvl), 0, 0, 0);
 }
-
