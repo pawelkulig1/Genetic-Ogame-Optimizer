@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <fstream>
 
+
 Utility::chromosome Utility::generate_random_chromosome(int size)
 {
     chromosome ret;
@@ -59,25 +60,74 @@ Utility::chromosome Utility::generate_random_possible_chromosome(size_t size)
     return ret;
 }
 
+void Utility::generate_random_possible_chromosome(std::promise<chromosome> * promObj)
+{
+    chromosome ret;
+    const auto size = m_default_chromosome_size;
+    ret.reserve(size);
+    std::vector<int> structures(static_cast<int>(globals::Upgradables::SIZE)-1);
+    int i = 0;
+    std::iota(structures.begin(), structures.end(), 0);
+    std::random_device rd;
+    std::mt19937 g(rd());
+    for (size_t i=0;i<size;)
+    {
+        bool impossible = true;
+
+        std::shuffle(structures.begin(), structures.end(), g);
+        ret.push_back(static_cast<int>(globals::Upgradables::SIZE));
+        for (auto &e: structures)
+        {
+            ret.at(i) = e;
+            if (m_fitness_function(ret) != 1e-100)
+            {
+                impossible = false;
+                break;
+            }
+        }
+        if (impossible)
+        {
+            break;
+        }
+        i++;
+    }
+    return promObj->set_value(ret);
+}
+
 void Utility::prepare_initial_population()
 {
+    // std::vector<std::thread> threads;
+    // std::vector<std::promise<chromosome> > promises;
+    std::vector<std::future<chromosome> > futures;
+
     for (int i=0;i<m_population_size; ++i)
     {
-        chromosome chr = generate_random_possible_chromosome(m_default_chromosome_size);
-        std::cout << i << '\n';
-        double fitness = m_fitness_function(chr);
-        m_chromosomes.push_back(std::make_pair(chr, fitness));
-        std::cout<< fitness << '\n';
+        futures.push_back(std::async([this](){return generate_random_possible_chromosome(m_default_chromosome_size);}));
     }
+    for(int i=0;i<m_population_size;i++)
+    {
+        auto ch = futures[i].get();
+        std::cout << "ch" << i << '\n';
+        m_chromosomes.push_back(std::make_pair(ch, m_fitness_function(ch)));
+    }
+
     sort_chromosomes();
+
 }
 
 void Utility::sort_chromosomes()
 {
+    std::vector<std::future<double> > futures;
     for (auto &el: m_chromosomes)
     {
-        el.second = m_fitness_function(el.first);
+        futures.push_back(std::async([el, this](){return m_fitness_function(el.first);}));
     }
+
+    for (size_t i{0}; i < m_chromosomes.size(); i++)
+    {
+        m_chromosomes[i].second = futures[i].get();
+    }
+
     std::sort(m_chromosomes.begin(), m_chromosomes.end(), [](const std::pair<std::vector<int>, double> &p1, const std::pair<std::vector<int>, double> &p2)
             { return p1.second > p2.second;});
 }

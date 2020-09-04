@@ -37,7 +37,9 @@ public:
     void setDeuterium(data_type);
 
     Resources operator+(Resources);
+	Resources operator+(const int);
     Resources operator-(Resources);
+	Resources operator*(const Resources&);
     Resources operator*(data_type);
     Resources operator^(data_type);
     Resources operator/(data_type);

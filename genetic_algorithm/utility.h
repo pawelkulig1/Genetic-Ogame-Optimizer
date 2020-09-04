@@ -4,6 +4,8 @@
 #include "crossover.h"
 #include <functional>
 #include <list>
+#include <thread>
+#include <future>
 
 class Utility
 {
@@ -45,6 +47,7 @@ class Utility
 public:
 	chromosome generate_random_chromosome(int size);
 	chromosome generate_random_possible_chromosome(size_t size);
+	void generate_random_possible_chromosome(std::promise<chromosome> * promObj);
 	void prepare_initial_population();
 	void set_crossover_strategy(Crossover<int> &crossover_strategy) {m_crossover_strategy = &crossover_strategy;}
 	void set_population_size(int size) {m_population_size = size;}

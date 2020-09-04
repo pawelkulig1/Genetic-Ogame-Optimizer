@@ -68,12 +68,25 @@ Resources Resources::operator+(Resources recv) {
     return temp;
 }
 
+Resources Resources::operator+(int recv) {
+    return Resources(metal + recv, crystal + recv, deuterium + recv, energy + recv);
+}
+
 Resources Resources::operator-(Resources recv) {
     Resources temp;
     temp.setMetal(metal - recv.metal);
     temp.setCrystal(crystal - recv.crystal);
     temp.setDeuterium(deuterium - recv.deuterium);
     temp.setEnergy(energy - recv.energy);
+    return temp;
+}
+
+Resources Resources::operator*(const Resources& recv) {
+    Resources temp;
+    temp.setMetal(metal * recv.getMetal());
+    temp.setCrystal(crystal * recv.getCrystal());
+    temp.setDeuterium(deuterium * recv.getDeuterium());
+    temp.setEnergy(energy * recv.getEnergy());
     return temp;
 }
 
@@ -161,7 +174,3 @@ Resources Resources::operator*(data_type mult) const {
     //temp.setEnergy(energy * mult);
     return temp;
 }
-
-
-
-

@@ -348,6 +348,7 @@ Resources Planet::getPlanetExtraction() const {
     auto metal_storage = get_structure<MetalStorage*>(globals::Upgradables::METAL_STORAGE);
     auto crystal_storage = get_structure<CrystalStorage*>(globals::Upgradables::CRYSTAL_STORAGE);
     auto deuterium_storage = get_structure<DeuteriumStorage*>(globals::Upgradables::DEUTERIUM_STORAGE);
+    auto plasma_technology = get_structure<PlasmaTechnology*>(globals::Upgradables::PLASMA_TECHNOLOGY);
 
     double fusion_consumption = fusion_plant->getProductionPerHour(energy_technology->getLvl()).at(2);
     if (deuteriumMine->getProductionPerHour().at(2) * static_cast<double>(productionFactor) < fusion_plant->getProductionPerHour(energy_technology->getLvl()).at(2))
@@ -362,6 +363,9 @@ Resources Planet::getPlanetExtraction() const {
                  deuteriumMine->getDefaultProductionPerHour()).at(2) -
                 fusion_consumption,
             calculatePlanetEnergy());
+
+    auto plasma_bonus = plasma_technology->get_extraction_bonus();
+    temp = temp * plasma_bonus;
 
     if (metal_storage->getStorageCapacity().getMetal() <= getResources().getMetal()) {
         temp.setMetal(0);

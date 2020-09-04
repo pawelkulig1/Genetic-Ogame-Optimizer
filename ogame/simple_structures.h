@@ -47,7 +47,6 @@ simple_structure(MissleSilo, Building, "Missle Silo", Resources(2e4, 2e4, 1e3, 0
                 })
 
 //Technologies
-
 simple_structure(ComputerTechnology, Technology, "Computer Technology", Resources(0, 400, 600, 0), 2,
                 construct_requirements(LABORATORY, 1), ;)
 
@@ -105,7 +104,9 @@ simple_structure(PlasmaTechnology, Technology, "Plasma Technology", Resources(2e
                 construct_requirements(ENERGY_TECHNOLOGY, 8)
                 construct_requirements(ION_TECHNOLOGY, 5),
                 Resources get_extraction_bonus() {
-                    return Resources(0.01, 0.0066, 0.0033) * getLvl();
+                    auto ret = Resources(0.01, 0.0066, 0.0033) * getLvl();
+                    ret = ret + 1;
+                    return ret;
                 })
 
 simple_structure(IntergalacticReasearchNetwork, Technology, "Intergalactic Research Network", Resources(240e3, 400e3, 160e3, 0), 2,
