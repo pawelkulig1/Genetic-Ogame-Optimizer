@@ -13,7 +13,7 @@ int main() {
 	srand(time(NULL));
 	Utility util = Utility();
 	util.set_fitness_function(&run_simulation);
-	
+
 	Crossover<int> *crossover_strategy = new BasicCrossoverOperator<int>();
 	util.set_crossover_strategy(*crossover_strategy);
 
@@ -25,18 +25,29 @@ int main() {
 
 double run_simulation(std::vector<int> chromosome)
 {
+	// using ASTROPHYSICS = globals::Upgradables::ASTROPHYSICS;
+	// using COLONIZATION_SHIP = globals::Upgradables::COLONIZATION_SHIP;
 	Simulation sim = Simulation();
 	auto out = sim.run(chromosome);
+	auto poz1 = std::find(chromosome.begin(), chromosome.end(), static_cast<int>(globals::Upgradables::TERRAFORMER));
+	// auto poz2 = std::find(chromosome.begin(), chromosome.end(), static_cast<int>(globals::Upgradables::COLONIZATION_SHIP));
+
 	double time = out[0];
 	double points = out[1];
 	double loaded_resources = out[2];
-	
-	
-	if (time == 0 || time > 1000 * 3600)
+	// if (time == 0 || time > 1000 * 3600)
+	// {
+	// 	return 1e-100;
+	// }
+	if (time == 0)
 	{
-		return 1e-100;
+		time = 1e100;
 	}
-	return loaded_resources;
+	else if(poz1 == chromosome.end()) //|| poz2 == chromosome.end())
+	{
+		time = 1e99;
+	}
+	return 1.0 / time;
 }
 
 std::vector<globals::Upgradables> example_queue()

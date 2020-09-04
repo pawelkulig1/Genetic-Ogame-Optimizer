@@ -22,7 +22,7 @@ Utility::chromosome Utility::generate_random_chromosome(int size)
     {
         ret.push_back(rnd->get_random_int(0, static_cast<int>(globals::Upgradables::SIZE)-1));
     }
-    
+
     return ret;
 }
 
@@ -35,7 +35,7 @@ Utility::chromosome Utility::generate_random_possible_chromosome(size_t size)
     std::iota(structures.begin(), structures.end(), 0);
     std::random_device rd;
     std::mt19937 g(rd());
-    for (size_t i=0;i<size;) 
+    for (size_t i=0;i<size;)
     {
         bool impossible = true;
 
@@ -64,10 +64,10 @@ void Utility::prepare_initial_population()
     for (int i=0;i<m_population_size; ++i)
     {
         chromosome chr = generate_random_possible_chromosome(m_default_chromosome_size);
-        std::cout << i << std::endl;
+        std::cout << i << '\n';
         double fitness = m_fitness_function(chr);
         m_chromosomes.push_back(std::make_pair(chr, fitness));
-        std::cout<< fitness << "\n";
+        std::cout<< fitness << '\n';
     }
     sort_chromosomes();
 }
@@ -127,13 +127,13 @@ int Utility::select()
         sum_of_fitness += pair.second;
     }
     double temp = 0;
-    
-    double pos = RandomGenerators::get_instance()->get_random_double(0, sum_of_fitness); 
+
+    double pos = RandomGenerators::get_instance()->get_random_double(0, sum_of_fitness);
     for(size_t i=0; i< m_chromosomes.size();i++)
     {
         if (temp >= pos)
         {
-            return i;	
+            return i;
         }
         temp += m_chromosomes.at(i).second;
     }
@@ -142,6 +142,7 @@ int Utility::select()
 
 int Utility::tournament_selection(int k)
 {
+    //based on fact that population is sorted
     std::vector<int> rands;
     rands.reserve(k);
 
@@ -158,7 +159,7 @@ void Utility::pick_elite()
 {
     int elite_size = elite_ratio * static_cast<double>(m_population_size);
     for (int i=0;i<elite_size;i++)
-    {			
+    {
         m_chromosomes_copy.push_back(m_chromosomes.at(i));
     }
 }
@@ -166,11 +167,9 @@ void Utility::pick_elite()
 void Utility::mutate_flip()
 {
     RandomGenerators * rg = RandomGenerators::get_instance();
-    // int mutation_start = 1;//m_population_size * elite_ratio;
-    //for (int i=mutation_start;i<m_chromosomes_copy.size();i++)
     for (auto &c: m_chromosomes_copy)
-    {			
-		if (c.first.size() > 2) 
+    {
+		if (c.first.size() > 2)
 		{
         	while (rg->get_random_double(0, 1) < dynamic_mutation_rate)
         	{
@@ -187,7 +186,7 @@ void Utility::mutate_swap()
     RandomGenerators * rg = RandomGenerators::get_instance();
     // int mutation_start = 1;// m_population_size * elite_ratio;
     for (auto &c: m_chromosomes_copy)
-    {		
+    {
         // auto ch	= &m_chromosomes_copy.at(i).first;
         while (rg->get_random_double(0, 1) < dynamic_swap_rate)
         {
@@ -205,7 +204,7 @@ void Utility::mutate_prune()
     RandomGenerators * rg = RandomGenerators::get_instance();
     //int mutation_start = 1; //m_population_size * elite_ratio;
     for (auto &c: m_chromosomes_copy)
-    {		
+    {
         while (rg->get_random_double(0, 1) < dynamic_prune_rate)
         {
             if (c.first.size() <= 2) {
@@ -222,7 +221,7 @@ void Utility::mutate_add()
 	RandomGenerators *rg = RandomGenerators::get_instance();
 	// int mutation_start = 1;
     for (auto &c: m_chromosomes_copy)
-    {		
+    {
         while (rg->get_random_double(0, 1) < dynamic_add_rate)
         {
             if (c.first.size() <= 2) {
@@ -238,7 +237,7 @@ void Utility::mutate_add()
 void Utility::crossover_chromosomes()
 {
     const int number_of_crossovers = (1 - drop_rate) * (m_population_size - m_chromosomes_copy.size());
-    for (int i=0; i< number_of_crossovers; ++i)
+    for (int i=0; i< number_of_crossovers / 2; ++i)
     {
         int index1 = tournament_selection(m_tournament_size);
         int index2 = tournament_selection(m_tournament_size);
@@ -246,8 +245,10 @@ void Utility::crossover_chromosomes()
         {
             std::runtime_error("Utility::crossover_chromosomes: m_crossover_strategy not set");
         }
-        chromosome child = m_crossover_strategy->cross(m_chromosomes.at(index1).first, m_chromosomes.at(index2).first);
-        m_chromosomes_copy.push_back(std::make_pair(child, 0));
+        auto children = m_crossover_strategy->cross(m_chromosomes.at(index1).first, m_chromosomes.at(index2).first);
+
+        m_chromosomes_copy.push_back(std::make_pair(children.first, 0));
+        m_chromosomes_copy.push_back(std::make_pair(children.second, 0));
     }
 }
 
@@ -281,35 +282,35 @@ void Utility::resize()
     //         c.first.erase(c.first.begin() + m_default_chromosome_size - 1, c.first.end());
     //     }
     // }
-    // RandomGenerators *rnd = RandomGenerators::get_instance();
-    // for (int c=0;c<m_chromosomes_copy.size();c++)
-    // {
-    //     auto ch = &m_chromosomes_copy.at(c).first;
-    //     bool found = false;
-    //     auto pos1 = std::find(ch->begin(), ch->end(), globals::ASTROPHYSICS);
-    //     auto pos2 = std::find(ch->begin(), ch->end(), globals::COLONIZATION_SHIP);
-    //     auto pos = std::max(pos1, pos2);
-    //     if (pos1 != ch->end() && pos2 != ch->end())
-    //     {
-    //         ch->erase(pos + 1, ch->end());
-    //         found = true;
-    //     }
+    RandomGenerators *rnd = RandomGenerators::get_instance();
+    for (int c=0;c<m_chromosomes_copy.size();c++)
+    {
+        auto ch = &m_chromosomes_copy.at(c).first;
+        bool found = false;
+        auto pos1 = std::find(ch->begin(), ch->end(), static_cast<int>(globals::Upgradables::ASTROPHYSICS));
+        auto pos2 = std::find(ch->begin(), ch->end(), static_cast<int>(globals::Upgradables::COLONIZATION_SHIP));
+        auto pos = std::max(pos1, pos2);
+        if (pos1 != ch->end() && pos2 != ch->end())
+        {
+            ch->erase(pos + 1, ch->end());
+            found = true;
+        }
 
-    //     if (!found)
-    //     {
-    //         ch->erase(ch->begin(), ch->end());
-    //         auto temp = tournament_selection(m_tournament_size);//generate_random_possible_chromosome(m_default_chromosome_size);
-    //         if (m_chromosomes_copy.at(temp).first.size() > 0)
-    //         {
-    //             ch->insert(ch->begin(), m_chromosomes_copy.at(temp).first.begin(), m_chromosomes_copy.at(temp).first.end());
-    //         }
-    //         else
-    //         {
-    //             auto random_chromosome = generate_random_possible_chromosome(m_default_chromosome_size);
-    //             ch->insert(ch->begin(), random_chromosome.begin(), random_chromosome.end());
-    //         }
-    //     }
-    // }
+        if (!found)
+        {
+            ch->erase(ch->begin(), ch->end());
+            auto temp = tournament_selection(m_tournament_size);//generate_random_possible_chromosome(m_default_chromosome_size);
+            if (m_chromosomes_copy.at(temp).first.size() > 0)
+            {
+                ch->insert(ch->begin(), m_chromosomes_copy.at(temp).first.begin(), m_chromosomes_copy.at(temp).first.end());
+            }
+            else
+            {
+                auto random_chromosome = generate_random_possible_chromosome(m_default_chromosome_size);
+                ch->insert(ch->begin(), random_chromosome.begin(), random_chromosome.end());
+            }
+        }
+    }
 }
 
 void Utility::run()
@@ -323,13 +324,13 @@ void Utility::run()
         std::cout<< "Epoch: " << epoch << ", ";
         m_chromosomes_copy.erase(m_chromosomes_copy.begin(), m_chromosomes_copy.end());
         pick_elite();
-        crossover_chromosomes(); 
+        crossover_chromosomes();
         fill_with_selection();
         mutate_flip();
         mutate_swap();
         mutate_prune();
 		mutate_add();
-        resize();
+        //resize();
         m_chromosomes.erase(m_chromosomes.begin(), m_chromosomes.end());
         m_chromosomes.insert(m_chromosomes.begin(), m_chromosomes_copy.begin(), m_chromosomes_copy.end());
         sort_chromosomes();
@@ -339,7 +340,7 @@ void Utility::run()
         {
             std::cout << el << ",";
         }
-        std::cout << " time: " << (1 / m_chromosomes.at(0).second)/3600 << " " << m_fitness_function(m_chromosomes.at(0).first) << "\n";
+        std::cout << " fitness: " << m_chromosomes.at(0).second << '\n';
         assert (m_population_size == m_chromosomes.size());
     }
     print();

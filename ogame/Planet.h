@@ -6,11 +6,9 @@
 #define OGAME_PLANET_H
 
 #include "BuildQueue.h"
-
-
 #include "Resources.h"
-
 #include "common_includes.h"
+#include "simple_structures.h"
 #include <memory>
 
 class Planet {

@@ -73,4 +73,3 @@ clean:
 	-rm ogame/Storage/*.o
 	-rm genetic_algorithm/*.o
 	-rm tests/*.o
-

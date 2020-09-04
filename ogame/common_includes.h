@@ -1,6 +1,6 @@
 #pragma once
 
-namespace globals { 
+namespace globals {
 
     enum class Upgradables
     {
@@ -16,19 +16,34 @@ namespace globals {
         LABORATORY	      =	8,
         ROBOT_FACTORY     = 9,
         SHIPYARD	      = 10,
-        	
+        NANITE_FACTORY    = 11,
+        TERRAFORMER           ,
+        ALIANCE_DEPOT         ,
+        MISSLE_SILO           ,
+
         //TECHNOLOGIES
-        ASTROPHYSICS         = 11,
-        ESPIONAGE_TECHNOLOGY = 12,
-        COMBUSTION_DRIVE     = 13,
-        IMPULSE_DRIVE        = 14,
-        ENERGY_TECHNOLOGY    = 15,
+        ESPIONAGE_TECHNOLOGY ,
+        COMPUTER_TECHNOLOGY  ,
+        WEAPONS_TECHNOLOGY   ,
+        SHIELDING_TECHNOLOGY ,
+        ARMOUR_TECHNOLOGY    ,
+        ENERGY_TECHNOLOGY    ,
+        HYPERSPACE_TECHNOLOGY,
+        COMBUSTION_DRIVE     ,
+        IMPULSE_DRIVE        ,
+        HYPERSPACE_DRIVE     ,
+        LASER_TECHNOLOGY     ,
+        ION_TECHNOLOGY       ,
+        PLASMA_TECHNOLOGY    ,
+        INTERGALACTIC_RESEARCH_NETWORK,
+        GRAVITON_TECHNOLOGY  ,
+        ASTROPHYSICS         ,
 
         //SHIPS
-        SOLAR_SATELLITE   = 16,
-        COLONIZATION_SHIP = 17,
-        SMALL_CARGO       = 18,
-        
+        SOLAR_SATELLITE  ,
+        COLONIZATION_SHIP,
+        SMALL_CARGO      ,
+
         SIZE
     };
 

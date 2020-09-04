@@ -9,7 +9,7 @@ class Utility
 {
 	using chromosome = std::vector<int>;
 	int m_population_size = 50;
-	unsigned int  m_default_chromosome_size = 50;
+	unsigned int  m_default_chromosome_size = 400;
 	Crossover<int> *m_crossover_strategy;
 	std::function<double (std::vector<int>)> m_fitness_function;
 	std::vector<std::pair<chromosome, double> > m_chromosomes;

@@ -41,35 +41,53 @@ Planet::Planet() : planet_temperature(75),
     construct_structure_list();
 }
 
+#define ADD_STRUCTURE(name) structure_list[i++] = std::make_unique<name>(name());
+
 void Planet::construct_structure_list()
 {
-    int i = 0;
-    // MetalMine mm = MetalMine();
-    structure_list[i++] = std::make_unique<MetalMine>(MetalMine());//metalMine; //0
-    structure_list[i++] = std::make_unique<CrystalMine>(CrystalMine());
-    structure_list[i++] = std::make_unique<DeuteriumMine>(DeuteriumMine());
-    structure_list[i++] = std::make_unique<MetalStorage>(MetalStorage());
-    structure_list[i++] = std::make_unique<CrystalStorage>(CrystalStorage());
-    structure_list[i++] = std::make_unique<DeuteriumStorage>(DeuteriumStorage());
-    structure_list[i++] = std::make_unique<SolarPlant>(SolarPlant());
-    structure_list[i++] = std::make_unique<FusionPlant>(FusionPlant());
-    structure_list[i++] = std::make_unique<Laboratory>(Laboratory());
-    structure_list[i++] = std::make_unique<RobotFactory>(RobotFactory());
-    structure_list[i++] = std::make_unique<Shipyard>(Shipyard());
+    int i = 0; // important - used in macro function
+    ADD_STRUCTURE(MetalMine)
+    ADD_STRUCTURE(CrystalMine);
+    ADD_STRUCTURE(DeuteriumMine);
+    ADD_STRUCTURE(MetalStorage)
+    ADD_STRUCTURE(CrystalStorage)
+    ADD_STRUCTURE(DeuteriumStorage)
+    ADD_STRUCTURE(SolarPlant)
+    ADD_STRUCTURE(FusionPlant)
+    ADD_STRUCTURE(Laboratory)
+    ADD_STRUCTURE(RobotFactory)
+    ADD_STRUCTURE(Shipyard)
+    ADD_STRUCTURE(NaniteFactory)
+    ADD_STRUCTURE(Terraformer)
+    ADD_STRUCTURE(AlianceDepot)
+    ADD_STRUCTURE(MissleSilo)
 
-    structure_list[i++] = std::make_unique<Astrophysics>(Astrophysics());
-    structure_list[i++] = std::make_unique<EspionageTechnology>(EspionageTechnology());
-    structure_list[i++] = std::make_unique<CombustionDrive>(CombustionDrive());
-    structure_list[i++] = std::make_unique<ImpulseDrive>(ImpulseDrive());
-    structure_list[i++] = std::make_unique<EnergyTechnology>(EnergyTechnology());
+    //TECHNOLOGIES
+    ADD_STRUCTURE(EspionageTechnology)
+    ADD_STRUCTURE(ComputerTechnology)
+    ADD_STRUCTURE(WeaponsTechnology)
+    ADD_STRUCTURE(ShieldingTechnology)
+    ADD_STRUCTURE(ArmourTechnology)
+    ADD_STRUCTURE(EnergyTechnology)
+    ADD_STRUCTURE(HyperspaceTechnology)
+    ADD_STRUCTURE(CombustionDrive)
+    ADD_STRUCTURE(ImpulseDrive)
+    ADD_STRUCTURE(HyperspaceDrive)
+    ADD_STRUCTURE(LaserTechnology)
+    ADD_STRUCTURE(IonTechnology)
+    ADD_STRUCTURE(PlasmaTechnology)
+    ADD_STRUCTURE(IntergalacticReasearchNetwork)
+    ADD_STRUCTURE(GravitonTechnology)
+    ADD_STRUCTURE(Astrophysics)
 
-    structure_list[i++] = std::make_unique<SolarSatellite>(SolarSatellite());
-    structure_list[i++] = std::make_unique<ColonizationShip>(ColonizationShip());
-    structure_list[i++] = std::make_unique<SmallCargo>(SmallCargo());
+    // SHIPS
+    ADD_STRUCTURE(SolarSatellite)
+    ADD_STRUCTURE(ColonizationShip)
+    ADD_STRUCTURE(SmallCargo)
 }
 
 void Planet::passTime(double seconds) {
-    auto metal_storage = get_structure<MetalStorage* >(globals::Upgradables::METAL_STORAGE);// _list[];
+    auto metal_storage = get_structure<MetalStorage*>(globals::Upgradables::METAL_STORAGE);// _list[];
     auto crystal_storage = get_structure<CrystalStorage*>(globals::Upgradables::CRYSTAL_STORAGE);
     auto deuterium_storage = get_structure<DeuteriumStorage*>(globals::Upgradables::DEUTERIUM_STORAGE);
 
