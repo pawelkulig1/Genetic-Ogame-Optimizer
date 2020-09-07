@@ -13,6 +13,7 @@
 
 class Planet {
 private:
+	bool construction_started = false;
 	double time = 0;
 	double points = 0;
 	double loaded_resources = 0;
@@ -33,6 +34,9 @@ private:
 
 public:
     Planet();
+	Planet(const Planet& planet);
+	Planet(Planet&& planet) noexcept;
+	//Planet & Planet::operator=(const Planet& planet);
 
 	template <class T>
 	T get_structure(int index) const
@@ -86,6 +90,7 @@ public:
 	double getPoints() const;
 	double getLoadedResources() const;
 	double get_construction_time(int structure_index) const;
+	const BuildQueue& getQueues() const;
 };
 
 

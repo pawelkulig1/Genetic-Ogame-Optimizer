@@ -1,6 +1,7 @@
 #include "utility.h"
 #include "common_includes.h"
 #include "random_generators.h"
+#include "Simulation.h"
 #include <stdlib.h>
 #include <time.h>
 #include <iostream>
@@ -9,8 +10,10 @@
 #include <fstream>
 
 
+
 Utility::chromosome Utility::generate_random_chromosome(int size)
 {
+    constexpr int max_element_val = static_cast<int>(globals::Upgradables::SIZE) * globals::max_number_of_planets;
     chromosome ret;
     ret.reserve(size);
     RandomGenerators *rnd = RandomGenerators::get_instance();
@@ -21,7 +24,7 @@ Utility::chromosome Utility::generate_random_chromosome(int size)
 
     for (int i=size/1;i<size;i++)
     {
-        ret.push_back(rnd->get_random_int(0, static_cast<int>(globals::Upgradables::SIZE)-1));
+        ret.push_back(rnd->get_random_int(0, max_element_val));
     }
 
     return ret;
@@ -29,9 +32,10 @@ Utility::chromosome Utility::generate_random_chromosome(int size)
 
 Utility::chromosome Utility::generate_random_possible_chromosome(size_t size)
 {
+    constexpr int max_element_val = static_cast<int>(globals::Upgradables::SIZE) * globals::max_number_of_planets;
     chromosome ret;
     ret.reserve(size);
-    std::vector<int> structures(static_cast<int>(globals::Upgradables::SIZE)-1);
+    std::vector<int> structures(max_element_val-1);
     int i = 0;
     std::iota(structures.begin(), structures.end(), 0);
     std::random_device rd;
@@ -41,7 +45,7 @@ Utility::chromosome Utility::generate_random_possible_chromosome(size_t size)
         bool impossible = true;
 
         std::shuffle(structures.begin(), structures.end(), g);
-        ret.push_back(static_cast<int>(globals::Upgradables::SIZE));
+        ret.push_back(max_element_val);
         for (auto &e: structures)
         {
             ret.at(i) = e;
@@ -58,40 +62,6 @@ Utility::chromosome Utility::generate_random_possible_chromosome(size_t size)
         i++;
     }
     return ret;
-}
-
-void Utility::generate_random_possible_chromosome(std::promise<chromosome> * promObj)
-{
-    chromosome ret;
-    const auto size = m_default_chromosome_size;
-    ret.reserve(size);
-    std::vector<int> structures(static_cast<int>(globals::Upgradables::SIZE)-1);
-    int i = 0;
-    std::iota(structures.begin(), structures.end(), 0);
-    std::random_device rd;
-    std::mt19937 g(rd());
-    for (size_t i=0;i<size;)
-    {
-        bool impossible = true;
-
-        std::shuffle(structures.begin(), structures.end(), g);
-        ret.push_back(static_cast<int>(globals::Upgradables::SIZE));
-        for (auto &e: structures)
-        {
-            ret.at(i) = e;
-            if (m_fitness_function(ret) != 1e-100)
-            {
-                impossible = false;
-                break;
-            }
-        }
-        if (impossible)
-        {
-            break;
-        }
-        i++;
-    }
-    return promObj->set_value(ret);
 }
 
 void Utility::prepare_initial_population()
@@ -103,11 +73,15 @@ void Utility::prepare_initial_population()
     for (int i=0;i<m_population_size; ++i)
     {
         futures.push_back(std::async([this](){return generate_random_possible_chromosome(m_default_chromosome_size);}));
+        //generate_random_possible_chromosome(m_default_chromosome_size);
+
     }
     for(int i=0;i<m_population_size;i++)
     {
         auto ch = futures[i].get();
-        std::cout << "ch" << i << '\n';
+        for_each(ch.begin(), ch.end(), [](int x){std::cout << x << ' ';});
+        std::cout << '\n';
+
         m_chromosomes.push_back(std::make_pair(ch, m_fitness_function(ch)));
     }
 
@@ -216,6 +190,7 @@ void Utility::pick_elite()
 
 void Utility::mutate_flip()
 {
+    const int max_element_val = static_cast<int>(globals::Upgradables::SIZE) * globals::max_number_of_planets;
     RandomGenerators * rg = RandomGenerators::get_instance();
     for (auto &c: m_chromosomes_copy)
     {
@@ -224,7 +199,7 @@ void Utility::mutate_flip()
         	while (rg->get_random_double(0, 1) < dynamic_mutation_rate)
         	{
                 const int pos = rg->get_random_int(0, c.first.size()-1);
-                const int new_val = rg->get_random_int(0, static_cast<int>(globals::Upgradables::SIZE) - 1);
+                const int new_val = rg->get_random_int(0, max_element_val - 1);
         	    c.first.at(pos) = new_val;
         	}
 		}
@@ -268,6 +243,7 @@ void Utility::mutate_prune()
 
 void Utility::mutate_add()
 {
+    const int max_element_val = static_cast<int>(globals::Upgradables::SIZE) * globals::max_number_of_planets;
 	RandomGenerators *rg = RandomGenerators::get_instance();
 	// int mutation_start = 1;
     for (auto &c: m_chromosomes_copy)
@@ -278,7 +254,7 @@ void Utility::mutate_add()
                 break;
             }
             int pos = rg->get_random_int(0, c.first.size() - 1);
-			int new_gene = rg->get_random_int(0, static_cast<int>(globals::Upgradables::SIZE) - 1);
+			int new_gene = rg->get_random_int(0, max_element_val - 1);
 			c.first.insert(c.first.begin() + pos, new_gene);
         }
     }
@@ -307,7 +283,7 @@ void Utility::fill_with_new()
     const int number_to_fill = m_population_size - m_chromosomes_copy.size();
     for (int i=0; i<number_to_fill; ++i)
     {
-        chromosome rnd = generate_random_chromosome(m_default_chromosome_size);
+        chromosome rnd = generate_random_possible_chromosome(m_default_chromosome_size);
         m_chromosomes_copy.push_back(std::make_pair(rnd, 0));
     }
 }
@@ -324,14 +300,6 @@ void Utility::fill_with_selection()
 
 void Utility::resize()
 {
-
-    // for (auto &c: m_chromosomes_copy)
-    // {
-    //     if (c.first.size() > m_default_chromosome_size)
-    //     {
-    //         c.first.erase(c.first.begin() + m_default_chromosome_size - 1, c.first.end());
-    //     }
-    // }
     RandomGenerators *rnd = RandomGenerators::get_instance();
     for (int c=0;c<m_chromosomes_copy.size();c++)
     {
@@ -371,7 +339,7 @@ void Utility::run()
 
     for (int epoch=0; epoch<500000;++epoch)
     {
-        std::cout<< "Epoch: " << epoch << ", ";
+
         m_chromosomes_copy.erase(m_chromosomes_copy.begin(), m_chromosomes_copy.end());
         pick_elite();
         crossover_chromosomes();
@@ -384,13 +352,16 @@ void Utility::run()
         m_chromosomes.erase(m_chromosomes.begin(), m_chromosomes.end());
         m_chromosomes.insert(m_chromosomes.begin(), m_chromosomes_copy.begin(), m_chromosomes_copy.end());
         sort_chromosomes();
-
-        std::cout << "best one: ";
-        for (const auto el: m_chromosomes.at(0).first)
+        if (epoch % 100 == 0)
         {
-            std::cout << el << ",";
+            std::cout<< "Epoch: " << epoch << ", ";
+            std::cout << "best one: ";
+            for (const auto el: m_chromosomes.at(0).first)
+            {
+                std::cout << el << ",";
+            }
+            std::cout << " fitness: " << m_chromosomes.at(0).second << '\n';
         }
-        std::cout << " fitness: " << m_chromosomes.at(0).second << '\n';
         assert (m_population_size == m_chromosomes.size());
     }
     print();

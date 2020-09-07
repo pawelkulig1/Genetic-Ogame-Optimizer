@@ -3,7 +3,7 @@
 #include "common_includes.h"
 #include <list>
 
-class GameObject 
+class GameObject
 {
 public:
 	using Requirements = std::pair<int, int>;
@@ -14,6 +14,9 @@ protected:
 	globals::QueueIndex queue_index;
 public:
 	GameObject(Resources default_cost);
+	GameObject(const GameObject& go);
+	GameObject(GameObject&& go) noexcept;
+	virtual ~GameObject() {}
     virtual const Resources &getDefaultCost() const;
     virtual void operator++() = 0;
     virtual double getConstructionTime(int robot_factory_shipyard_level, int nanite_factory_level) const = 0;

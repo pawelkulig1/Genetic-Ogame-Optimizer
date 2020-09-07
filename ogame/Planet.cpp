@@ -31,6 +31,8 @@
 #include "SolarSatellite.h"
 #include "ColonizationShip.h"
 #include "SmallCargo.h"
+#include <cassert>
+// #include <chrono>
 
 
 Planet::Planet() : planet_temperature(75),
@@ -41,14 +43,86 @@ Planet::Planet() : planet_temperature(75),
     construct_structure_list();
 }
 
+
+#define COPY_STRUCTURE(name) structure_list[i] = std::make_unique<name>(name(*planet.get_structure<name*>(i)));i++;
 #define ADD_STRUCTURE(name) structure_list[i++] = std::make_unique<name>(name());
+
+Planet::Planet(const Planet& planet) : planet_temperature(planet.planet_temperature)
+{
+    // static double counter = 0;
+    // auto start = std::chrono::steady_clock::now();
+    buildQueue = planet.buildQueue;
+    resources = planet.resources;//Resources(500, 500, 0, 0);
+    productionFactor = planet.productionFactor;
+    int i = 0;
+
+    COPY_STRUCTURE(MetalMine)
+    COPY_STRUCTURE(CrystalMine)
+    COPY_STRUCTURE(DeuteriumMine)
+    COPY_STRUCTURE(MetalStorage)
+    COPY_STRUCTURE(CrystalStorage)
+    COPY_STRUCTURE(DeuteriumStorage)
+    COPY_STRUCTURE(SolarPlant)
+    COPY_STRUCTURE(FusionPlant)
+    COPY_STRUCTURE(Laboratory)
+    COPY_STRUCTURE(RobotFactory)
+    COPY_STRUCTURE(Shipyard)
+    COPY_STRUCTURE(NaniteFactory)
+    COPY_STRUCTURE(Terraformer)
+    COPY_STRUCTURE(AlianceDepot)
+    COPY_STRUCTURE(MissleSilo)
+
+    //TECHNOLOGIES
+    COPY_STRUCTURE(EspionageTechnology)
+    COPY_STRUCTURE(ComputerTechnology)
+    COPY_STRUCTURE(WeaponsTechnology)
+    COPY_STRUCTURE(ShieldingTechnology)
+    COPY_STRUCTURE(ArmourTechnology)
+    COPY_STRUCTURE(EnergyTechnology)
+    COPY_STRUCTURE(HyperspaceTechnology)
+    COPY_STRUCTURE(CombustionDrive)
+    COPY_STRUCTURE(ImpulseDrive)
+    COPY_STRUCTURE(HyperspaceDrive)
+    COPY_STRUCTURE(LaserTechnology)
+    COPY_STRUCTURE(IonTechnology)
+    COPY_STRUCTURE(PlasmaTechnology)
+    COPY_STRUCTURE(IntergalacticReasearchNetwork)
+    COPY_STRUCTURE(GravitonTechnology)
+    COPY_STRUCTURE(Astrophysics)
+
+    // SHIPS
+    COPY_STRUCTURE(SolarSatellite)
+    COPY_STRUCTURE(ColonizationShip)
+    COPY_STRUCTURE(SmallCargo)
+    assert(i == static_cast<int>(globals::Upgradables::SIZE));
+    // auto end = std::chrono::steady_clock::now();
+    // std::chrono::duration<double> delta = end - start;
+    // counter += delta.count();
+    // std::cout << "copy constructor " << counter << '\n';
+}
+
+Planet::Planet(Planet&& planet) noexcept : planet_temperature(planet.planet_temperature)
+{
+    structure_list = std::move(planet.structure_list);
+    buildQueue = std::move(planet.buildQueue);
+    resources = planet.resources;//Resources(500, 500, 0, 0);
+    productionFactor = planet.productionFactor;
+}
+
+// Planet& Planet::operator(const Planet& planet) {
+//
+// }
+
 
 void Planet::construct_structure_list()
 {
+    // static double counter = 0;
     int i = 0; // important - used in macro function
+    // auto start = std::chrono::steady_clock::now();
+
     ADD_STRUCTURE(MetalMine)
-    ADD_STRUCTURE(CrystalMine);
-    ADD_STRUCTURE(DeuteriumMine);
+    ADD_STRUCTURE(CrystalMine)
+    ADD_STRUCTURE(DeuteriumMine)
     ADD_STRUCTURE(MetalStorage)
     ADD_STRUCTURE(CrystalStorage)
     ADD_STRUCTURE(DeuteriumStorage)
@@ -84,6 +158,11 @@ void Planet::construct_structure_list()
     ADD_STRUCTURE(SolarSatellite)
     ADD_STRUCTURE(ColonizationShip)
     ADD_STRUCTURE(SmallCargo)
+    assert(i == static_cast<int>(globals::Upgradables::SIZE));
+    // auto end = std::chrono::steady_clock::now();
+    // std::chrono::duration<double> delta = end - start;
+    // counter += delta.count();
+    // std::cout << "construct_structure_list: " << counter << '\n';
 }
 
 void Planet::passTime(double seconds) {
@@ -123,7 +202,8 @@ void Planet::passTime(double seconds) {
 
 int Planet::upgrade_structure(int structure_index)
 {
-    auto structure = get_structure<GameObject*>(structure_index);//structure_list[structure_index];
+    construction_started = true;
+    const auto structure = get_structure<GameObject*>(structure_index);//structure_list[structure_index];
     Resources upgradeCost = structure->getUpgradeCost();
 
     if (!can_upgrade_laboratory && structure_index == static_cast<int>(globals::Upgradables::LABORATORY))
@@ -155,7 +235,9 @@ int Planet::upgrade_structure(int structure_index)
         // std::cout<<"time to closest upgrade: "<< time_to_closest_upgrade << std::endl;
         if (time_to_closest_upgrade <= 0 && !buildQueue.isEmpty(buildQueue.getFinishedIndex()))
         {
-            buildQueue.getFinishedBuilding()->operator++();
+            int id = buildQueue.getFinishedBuildingId();
+            get_structure<GameObject*>(id)->operator++();
+            // buildQueue.getFinishedBuilding()->operator++();
             resources.setEnergy(calculatePlanetEnergy());
             calculateProductionFactor();
 
@@ -193,7 +275,7 @@ int Planet::upgrade_structure(int structure_index)
         }
     }
 
-    if (!buildQueue.addToQueue(queue_index, structure, construction_time)) {
+    if (!buildQueue.addToQueue(queue_index, structure_index, construction_time)) {
         throw(std::runtime_error("queue not empty when upgrading!"));
     }
 
@@ -257,7 +339,8 @@ void Planet::finish_queues()
         double time_to_closest_upgrade = buildQueue.getShortestTime();
         if (time_to_closest_upgrade <= 0)
         {
-            buildQueue.getFinishedBuilding()->operator++();
+            int id = buildQueue.getFinishedBuildingId();
+            get_structure<GameObject*>(id)->operator++();
             resources.setEnergy(calculatePlanetEnergy());
             calculateProductionFactor();
             buildQueue.clearQueue(buildQueue.getFinishedIndex());
@@ -302,7 +385,7 @@ double Planet::getTimeToLoadResources(int structure_index)
     const int queue_index = static_cast<int>(structure->getQueueIndex());
     Resources upgrade_cost = structure->getUpgradeCost();
     //case when the same object is in queue and is going to be built, this means we have to calculate cost as if it was built already but production not.
-    if (buildQueue.at(queue_index) == structure && queue_index != static_cast<int>(globals::QueueIndex::SHIP)) {
+    if (buildQueue.at(queue_index) == structure_index && queue_index != static_cast<int>(globals::QueueIndex::SHIP)) {
         const int lvl = static_cast<Structure *>(structure)->getLvl();
         static_cast<Structure* >(structure)->setLvl(lvl + 1);
         upgrade_cost = structure->getUpgradeCost();
@@ -465,4 +548,9 @@ double Planet::getPoints() const
 double Planet::getLoadedResources() const
 {
     return loaded_resources;
+}
+
+const BuildQueue& Planet::getQueues() const
+{
+    return buildQueue;
 }

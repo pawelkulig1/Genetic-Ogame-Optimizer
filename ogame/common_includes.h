@@ -1,6 +1,7 @@
 #pragma once
 
 namespace globals {
+    inline constexpr int max_number_of_planets = 1;
 
     enum class Upgradables
     {
@@ -37,7 +38,7 @@ namespace globals {
         PLASMA_TECHNOLOGY    ,
         INTERGALACTIC_RESEARCH_NETWORK,
         GRAVITON_TECHNOLOGY  ,
-        ASTROPHYSICS         ,
+        ASTROPHYSICS         = 30,
 
         //SHIPS
         SOLAR_SATELLITE  ,

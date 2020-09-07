@@ -29,8 +29,8 @@ double run_simulation(std::vector<int> chromosome)
 	// using COLONIZATION_SHIP = globals::Upgradables::COLONIZATION_SHIP;
 	Simulation sim = Simulation();
 	auto out = sim.run(chromosome);
-	auto poz1 = std::find(chromosome.begin(), chromosome.end(), static_cast<int>(globals::Upgradables::TERRAFORMER));
-	// auto poz2 = std::find(chromosome.begin(), chromosome.end(), static_cast<int>(globals::Upgradables::COLONIZATION_SHIP));
+	auto poz1 = std::find(chromosome.begin(), chromosome.end(), static_cast<int>(globals::Upgradables::ASTROPHYSICS));
+	auto poz2 = std::find(chromosome.begin(), chromosome.end(), static_cast<int>(globals::Upgradables::COLONIZATION_SHIP));
 
 	double time = out[0];
 	double points = out[1];
@@ -39,11 +39,11 @@ double run_simulation(std::vector<int> chromosome)
 	// {
 	// 	return 1e-100;
 	// }
-	if (time == 0)
+	if (time == 0 || points == 0 || loaded_resources == 0 || chromosome.size() > 200)
 	{
-		time = 1e100;
+		return 1e-100;
 	}
-	else if(poz1 == chromosome.end()) //|| poz2 == chromosome.end())
+	else if(poz1 == chromosome.end() || poz2 == chromosome.end())
 	{
 		time = 1e99;
 	}

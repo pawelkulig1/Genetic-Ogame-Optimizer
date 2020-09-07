@@ -26,6 +26,7 @@ public:
     Resources(data_type, data_type);
     Resources(data_type, data_type, data_type);
     Resources(data_type, data_type, data_type, data_type);
+	Resources(const Resources& other);
 
     data_type getMetal(void) const;
     data_type getCrystal(void) const;

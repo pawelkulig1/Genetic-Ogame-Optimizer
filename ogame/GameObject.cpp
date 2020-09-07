@@ -7,6 +7,22 @@ GameObject::GameObject(Resources default_cost): defaultCost(default_cost)
 	queue_index = globals::QueueIndex::NONE;
 }
 
+GameObject::GameObject(const GameObject& go)
+{
+	defaultCost = go.defaultCost;
+	name = go.name;
+	m_requirements = std::list<Requirements >(go.m_requirements);
+	queue_index = go.queue_index;
+}
+
+GameObject::GameObject(GameObject&& go) noexcept
+{
+	defaultCost = go.defaultCost;
+	name = go.name;
+	m_requirements = std::move(go.m_requirements);
+	queue_index = go.queue_index;
+}
+
 std::ostream &operator<<(std::ostream &out, const GameObject &b) {
     out << "Name: " << b.name << ", ";
 	out << "Requirements: \n";
@@ -30,7 +46,7 @@ void GameObject::setName(std::string name) {
 }
 
 globals::QueueIndex GameObject::getQueueIndex() const
-{	
+{
 	assert (static_cast<int>(queue_index) >= 0);
 	return queue_index;
 }
@@ -38,4 +54,3 @@ globals::QueueIndex GameObject::getQueueIndex() const
 std::list<GameObject::Requirements> GameObject::get_requirements() {
 	return m_requirements;
 }
-

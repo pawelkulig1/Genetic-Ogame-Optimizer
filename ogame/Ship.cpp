@@ -7,7 +7,12 @@ Ship::Ship(Resources default_cost) : GameObject(default_cost)
 	queue_index = globals::QueueIndex::SHIP;
 }
 
-void Ship::operator++() 
+Ship::Ship(const Ship& ship): GameObject(ship)
+{
+	m_count = ship.m_count;
+}
+
+void Ship::operator++()
 {
 	m_count += 1;
 }
@@ -17,7 +22,7 @@ double Ship::getConstructionTime(int shipyard_level, int nanite_factory_level) c
     return (3600 * (defaultCost.at(0) + defaultCost.at(1)) / (2500 * (shipyard_level + 1)) * pow(0.5, nanite_factory_level));
 }
 
-Resources Ship::getUpgradeCost() const 
+Resources Ship::getUpgradeCost() const
 {
 	return defaultCost;
 }

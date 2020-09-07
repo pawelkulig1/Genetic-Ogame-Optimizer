@@ -17,6 +17,13 @@ Resources::Resources(data_type metal, data_type crystal) : metal(metal), crystal
 Resources::Resources(data_type metal, data_type crystal, data_type deuterium, data_type energy) :
         metal(metal), crystal(crystal), deuterium(deuterium), energy(energy) {}
 
+Resources::Resources(const Resources& resources) {
+    metal = resources.metal;
+    crystal = resources.crystal;
+    deuterium = resources.deuterium;
+    energy = resources.energy;
+}
+
 Resources::data_type Resources::getMetal(void) const{
     return metal;
 }

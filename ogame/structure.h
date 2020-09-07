@@ -9,6 +9,7 @@ protected:
 public:
 	virtual ~Structure();
 	Structure(const Resources &defaultCost, double costRatio = 2);
+	Structure(const Structure& structure);
     virtual int getLvl() const;
 	virtual Resources getUpgradeCost() const override;
     virtual const double getCostRatio() const;

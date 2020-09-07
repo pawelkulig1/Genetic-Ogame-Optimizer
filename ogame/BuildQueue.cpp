@@ -2,53 +2,60 @@
 #include "GameObject.h"
 #include <limits>
 #include <cassert>
+#include <algorithm>
+#include <functional>
+// #include <cstring>
 
 BuildQueue::BuildQueue()
 {
-    for (int i=0;i<queues;i++)
-    {
-        m_empty[i] = true;
-        time_left[i] = 0;
-        queue[i] = nullptr;
-    }
-    finished_index = -1;
+    queues.fill(Queue());
+}
+
+BuildQueue::BuildQueue(const BuildQueue& bq)
+{
+    queues = bq.queues;
+}
+
+BuildQueue::BuildQueue(BuildQueue&& bq) noexcept
+{
+    queues = std::move(bq.queues);
+}
+
+BuildQueue& BuildQueue::operator=(BuildQueue&& bq) noexcept
+{
+    if (&bq == this) return *this;
+    queues = std::move(bq.queues);
+    return *this;
+}
+
+BuildQueue& BuildQueue::operator=(const BuildQueue& bq)
+{
+    if (&bq == this) return *this;
+    queues = bq.queues;
+    return *this;
 }
 
 bool BuildQueue::isEmpty(int index) const
 {
-    if(index == -1)
-    {
-        for (int i=0;i<queues;i++)
-        {
-            if (!m_empty[i]) return false;
-        }
-        return true;
-    }
+    if (index == -1) {return std::all_of(queues.begin(), queues.end(), [](const Queue& q){return q.m_empty;});}
     else
     {
         verify_index(index);
-        return m_empty[index];
+        return queues[index].m_empty;
     }
-    
 }
 
 double BuildQueue::getShortestTime() const
 {
-    bool all = true;
-    for(int i=0;i<queues;i++)
-    {
-        if (!m_empty[i]) {
-            all = false;
-        }
-    }
-    if (all) return 0;
+    if (std::all_of(queues.begin(), queues.end(), [](const Queue& q){return q.m_empty;})) {return 0;}
 
     double min_time = std::numeric_limits<double>::max();
-    for (int i=0;i<queues;i++)
+
+    for (int i=0;i<m_number_of_queues;i++)
     {
-        if (!m_empty[i])
+        if (!queues[i].m_empty)
         {
-            min_time = std::min(min_time, time_left[i]);
+            min_time = std::min(min_time, queues[i].m_time_left);
         }
     }
     return min_time;
@@ -63,92 +70,84 @@ double BuildQueue::passShortestTime()
 
 void BuildQueue::passTime(double time)
 {
-    for (int i=0;i<queues;i++)
-    {
-        if (!m_empty[i])
-        {
-            time_left[i] -= time;
-            if (time_left[i] <= 0 && queue[i] != nullptr) 
-            {
-                finished_index = i;
-            }
-        }
-    }
+    std::for_each(queues.begin(), queues.end(), [time](Queue& q) {
+        if (!q.m_empty) q.m_time_left -= time;
+    });
 }
 
-GameObject* BuildQueue::getFinishedBuilding()
+int BuildQueue::getFinishedBuildingId()
 {
-    verify_index(finished_index);
-    if (finished_index != -1)
-    {
-        return queue[finished_index];
-    }
-}	
+    auto it = std::find_if(queues.begin(), queues.end(), [](const Queue& q) {
+        return (!q.m_empty && q.m_time_left <= 0 && q.id != -1);
+    });
+    assert (it != queues.end());
+    return it->id;
+}
 
 int BuildQueue::getFinishedIndex() const
 {
-    if (finished_index != -1)
+    auto it = std::find_if(queues.begin(), queues.end(), [](const Queue& q) {
+        return (!q.m_empty && q.m_time_left <= 0 && q.id != -1);
+    });
+    // assert (it != queues.end());
+    //legacy
+    if (it == queues.end())
     {
-        return finished_index;
+        return 0;
     }
-    return static_cast<int>(globals::QueueIndex::NONE);
+    return std::distance(queues.begin(), it);
 }
 
-bool BuildQueue::addToQueue(int index, GameObject *obj, double construction_time)
+bool BuildQueue::addToQueue(int index, int id, double construction_time)
 {
     verify_index(index);
-    if (!m_empty[index]) {return false;}
-    m_empty[index] = false;
-    time_left[index] = construction_time;
-    queue[index] = obj;
+    if (!queues[index].m_empty) {return false;}
+    queues[index].m_empty = false;
+    queues[index].m_time_left = construction_time;
+    queues[index].id = id;
     return true;
 }
 
 void BuildQueue::clearQueue(int index)
 {
     verify_index(index);
-    assert (time_left[index] <= 0);
+    assert (queues[index].m_time_left <= 0);
 
-    m_empty[index] = true;
-    time_left[index] = 0.0;
-    queue[index] = nullptr;
+    queues[index].m_empty = true;
+    queues[index].m_time_left = 0.0;
+    queues[index].id = -1;
 
-    for(int i=0;i<queues;i++) 
-    {
-        if (time_left[i] <= 0 && queue[i] == nullptr)
-        {
-            m_empty[i] = true;
-            time_left[i] = 0.0;
-        }
-    }
+    std::for_each(queues.begin(), queues.end(), [](Queue& q){
+        if (q.m_time_left <= 0 && q.id == -1) {q.m_empty = true; q.m_time_left = 0.0;}
+    });
 }
 
 void BuildQueue::lockQueue(int index, double time)
 {
     verify_index(index);
-    if (m_empty[index])
+    if (queues[index].m_empty)
     {
-        time_left[index] = time;
-        m_empty[index] = false;
-        queue[index] = nullptr;
+        queues[index].m_time_left = time;
+        queues[index].m_empty = false;
+        queues[index].id = -1;
     }
 }
 
 double BuildQueue::getTime(int index)
 {
     verify_index(index);
-    return time_left[index];
+    return queues[index].m_time_left;
 }
 
 bool BuildQueue::verify_index(int index) const
 {
-    assert (index >= 0);
+    assert (index >= -1);
     assert (index < static_cast<int>(globals::QueueIndex::END));
     return true;
 }
 
-GameObject* BuildQueue::at(int index) {
+int BuildQueue::at(int index) {
     assert (index >= 0);
-    assert (index < queues);
-    return queue[index];
+    assert (index < m_number_of_queues);
+    return queues[index].id;
 }

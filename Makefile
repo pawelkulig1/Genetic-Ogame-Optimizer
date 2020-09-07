@@ -49,7 +49,7 @@ INCLUDES=-Iogame \
 		 -Iogame/Technologies \
 		 -Iogame/Storage
 
-CXXFLAGS=--std=c++17 -Wall -g $(INCLUDES) -O3 -lpthread
+CXXFLAGS=--std=c++2a -Wall -g $(INCLUDES) -O3 -lpthread
 
 OUT=main.o
 OUT_TESTS=test.o

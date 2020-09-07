@@ -6,7 +6,13 @@ Structure::Structure(const Resources &defaultCost, const double costRatio):
 					GameObject(defaultCost),
                     costRatio(costRatio)
 {
-	lvl = 0;																		   
+	lvl = 0;
+}
+
+Structure::Structure(const Structure& structure) : GameObject(structure)
+{
+	lvl = structure.lvl;
+	costRatio = structure.costRatio;
 }
 
 Structure::~Structure()
