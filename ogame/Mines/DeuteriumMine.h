@@ -19,6 +19,9 @@ public:
                   double productionRatio = 10,
                   double energyRatio = 20);
 
+    virtual ~DeuteriumMine() {}
+
+
     const Resources getProductionPerHour() const override;
 };
 

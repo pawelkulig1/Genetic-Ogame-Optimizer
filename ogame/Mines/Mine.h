@@ -23,6 +23,7 @@ public:
     Mine(const Resources &defaultCost, const double costRatio, const Resources &defaultProductionPerHour,
          double productionRatio, double energyRatio);
 	Mine();
+    virtual ~Mine() {}
 
     virtual const Resources getProductionPerHour() const = 0;
 

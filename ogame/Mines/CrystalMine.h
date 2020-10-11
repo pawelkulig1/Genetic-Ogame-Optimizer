@@ -16,6 +16,8 @@ public:
                 const Resources &defaultProductionPerHour = Resources(0, 20, 0, 0),
                 double productionRatio = 20,
                 double energyRatio = 10);
+    
+    ~CrystalMine() {}
 
 	const Resources getProductionPerHour() const override;
 };

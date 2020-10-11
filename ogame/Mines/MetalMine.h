@@ -16,6 +16,8 @@ public:
               const int productionRatio = 30,
               const int energyRatio = 10);
 
+    virtual ~MetalMine() {}
+
 	const Resources getProductionPerHour() const override;
 };
 
