@@ -10,18 +10,25 @@
 #include "common_includes.h"
 #include "simple_structures.h"
 #include <memory>
+#include <array>
+#include "GameObject.h"
 
 class Planet {
 private:
 	double time = 0;
 	double points = 0;
 	double loaded_resources = 0;
-	std::array<std::unique_ptr<GameObject>, static_cast<int>(globals::Upgradables::SIZE)> structure_list;
+	std::array<int, globals::BUILDINGS.SIZE> building_lvls{0};
+	std::array<int, globals::SHIPS.SIZE> ships_lvls{0};
+	//technologies are shared between planets
+	static std::array<int, globals::TECHNOLOGIES.SIZE> technologies_lvls{0};
+
+	//std::array<std::unique_ptr<GameObject>, static_cast<int>(globals::Upgradables::SIZE)> structure_list;
 	BuildQueue buildQueue;
 
     Resources resources;
-	const int planet_temperature;
-	int nanite_factory_level = 0;
+	int planet_temperature;
+	//int nanite_factory_level = 0;
 
 	//Production factor is based on avaliable energy on planet
     double productionFactor;
@@ -29,41 +36,41 @@ private:
 	bool can_upgrade_shipyard = true;
 	bool can_upgrade_laboratory = true;
 
-	void construct_structure_list();
+	//void construct_structure_list();
 
 public:
     Planet();
 
-	template <class T>
-	T get_structure(int index) const
-	{
-	    if (index < static_cast<int>(globals::Upgradables::SIZE))
-		{
-			auto temp = dynamic_cast<T>(structure_list[index].get());
-			if (temp)
-			{
-	        	return temp;
-			}
-			throw(std::runtime_error("Planet::get_structure incorrect type cast!"));
-		}
-		throw(std::runtime_error("Planet::get_structure incorrect index!"));
-	}
+	//template <class T>
+	//T get_structure(int index) const
+	//{
+	//    if (index < static_cast<int>(globals::Upgradables::SIZE))
+	//	{
+	//		auto temp = dynamic_cast<T>(structure_list[index].get());
+	//		if (temp)
+	//		{
+	//        	return temp;
+	//		}
+	//		throw(std::runtime_error("Planet::get_structure incorrect type cast!"));
+	//	}
+	//	throw(std::runtime_error("Planet::get_structure incorrect index!"));
+	//}
 
-	template <class T>
-	T get_structure(globals::Upgradables index) const
-	{
-	    int lindex = static_cast<int>(index);
-	    if (lindex < static_cast<int>(globals::Upgradables::SIZE))
-	    {
-			auto temp = dynamic_cast<T>(structure_list[lindex].get());
-			if (temp) {
-				return temp;
-			}
-			throw(std::runtime_error("Planet::get_structure incorrect type cast!"));
+	//template <class T>
+	//T get_structure(globals::Upgradables index) const
+	//{
+	//    int lindex = static_cast<int>(index);
+	//    if (lindex < static_cast<int>(globals::Upgradables::SIZE))
+	//    {
+	//		auto temp = dynamic_cast<T>(structure_list[lindex].get());
+	//		if (temp) {
+	//			return temp;
+	//		}
+	//		throw(std::runtime_error("Planet::get_structure incorrect type cast!"));
 
-	    }
-	    throw(std::runtime_error("Planet::get_structure incorrect index!"));
-	}
+	//    }
+	//    throw(std::runtime_error("Planet::get_structure incorrect index!"));
+	//}
 
 
     void passTime(double);

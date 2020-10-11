@@ -14,6 +14,7 @@ protected:
 	globals::QueueIndex queue_index;
 public:
 	GameObject(Resources default_cost);
+	virtual ~GameObject() {}
     virtual const Resources &getDefaultCost() const;
     virtual void operator++() = 0;
     virtual double getConstructionTime(int robot_factory_shipyard_level, int nanite_factory_level) const = 0;

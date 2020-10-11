@@ -2,7 +2,7 @@
 
 namespace globals {
 
-    enum class Upgradables
+    enum BUILDINGS
     {
         //BUILDINGS
         METAL_MINE        = 0,
@@ -20,7 +20,12 @@ namespace globals {
         TERRAFORMER           ,
         ALIANCE_DEPOT         ,
         MISSLE_SILO           ,
+	
+		SIZE
+	};
 
+	enum TECHNOLOGIES 
+	{
         //TECHNOLOGIES
         ESPIONAGE_TECHNOLOGY ,
         COMPUTER_TECHNOLOGY  ,
@@ -38,7 +43,12 @@ namespace globals {
         INTERGALACTIC_RESEARCH_NETWORK,
         GRAVITON_TECHNOLOGY  ,
         ASTROPHYSICS         ,
+	
+		SIZE
+	};
 
+	enum SHIPS
+	{
         //SHIPS
         SOLAR_SATELLITE  ,
         COLONIZATION_SHIP,
