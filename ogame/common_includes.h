@@ -2,7 +2,9 @@
 
 namespace globals {
 
-    enum BUILDINGS
+    using type = uint64_t;
+
+    enum class BUILDINGS
     {
         //BUILDINGS
         METAL_MINE        = 0,
@@ -24,7 +26,7 @@ namespace globals {
 		SIZE
 	};
 
-	enum TECHNOLOGIES 
+	enum class TECHNOLOGIES 
 	{
         //TECHNOLOGIES
         ESPIONAGE_TECHNOLOGY ,
@@ -47,7 +49,7 @@ namespace globals {
 		SIZE
 	};
 
-	enum SHIPS
+	enum class SHIPS
 	{
         //SHIPS
         SOLAR_SATELLITE  ,

@@ -1,26 +1,23 @@
 #pragma once
-//#include "Cache.h"
 #include <math.h>
 #include <array>
 #include <utility>
 #include "Mine2.h"
 
-class MetalMine
+class CrystalMine
 {
 public:
-	//static constexpr Resources default_cost = Resources(60, 15, 0, 0);
-	static constexpr Resources default_cost = {60, 15, 0};
-	static constexpr double cost_ratio = 1.5;
-	static constexpr int production_ratio = 30;
-	static constexpr double default_production = 30;
+	static constexpr Resources default_cost = {48, 24, 0};
+	static constexpr double cost_ratio = 1.6;
+	static constexpr int production_ratio = 20;
+	static constexpr double default_production = 20;
 	static constexpr int energy_ratio = 10;
 	static constexpr int max_level = 40;
 
-	static constexpr std::array<type, max_level> production_cache = generate_production<max_level>(production_ratio, default_production);
+	static constexpr std::array<type, max_level> production_cache = generate_production<max_level>(production_ratio);
 	static constexpr std::array<type, max_level> energy_usage_cache = generate_production<max_level>(energy_ratio);
 	static constexpr std::array<Resources, max_level> cost_cache = generate_costs<max_level>(default_cost, cost_ratio);
-public:
-
+	
 	consteval static type get_production(int lvl)
 	{
 		return production_cache[lvl];
@@ -45,5 +42,4 @@ public:
 	{
 		return std::array<std::pair<int, int>, 0> {};
 	}
-
 };

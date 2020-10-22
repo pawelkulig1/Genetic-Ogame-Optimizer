@@ -6,8 +6,8 @@
 
 class MetalStorage: public Building
 {
-    const int max_level = 20;
-    std::array<double, 20> m_capacity = {
+    static constexpr int max_level = 20;
+    std::array<globals::type, 20> m_capacity = {
         10      *   1e3,
         20      *   1e3,
         40      *   1e3,
