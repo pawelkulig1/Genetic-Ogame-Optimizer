@@ -2,6 +2,19 @@
 #include "Resources.h"
 #include "common_includes.h"
 #include <list>
+#include <array>
+#include <math.h>
+
+static consteval std::array<double, 10> generate_nanite_cache()
+{
+    std::array<double, 10> temp;
+    for(int i = 0; i < 10; i++)
+    {
+        temp[i] = pow(0.5, i);
+    }
+    return temp;
+}
+
 
 class GameObject
 {
@@ -12,6 +25,9 @@ protected:
 	std::string name;
 	std::list<Requirements> m_requirements;
 	globals::QueueIndex queue_index;
+    
+    static constexpr std::array<double, 10> nanite_cache = generate_nanite_cache();
+
 public:
 	GameObject(Resources default_cost);
 	GameObject(const GameObject& go);

@@ -6,7 +6,7 @@
 #include "SolarPlant.h"
 
 Resources SolarPlant::getProductionPerHour() const {
-    return Resources(0, 0, 0, productionRatio * lvl * pow(1.1, lvl));
+    return Resources(0, 0, 0, productionRatio * lvl * cache_ratio[lvl]);
 }
 
 SolarPlant::SolarPlant(Resources defaultCost, double costRatio, int productionRatio) : Building(

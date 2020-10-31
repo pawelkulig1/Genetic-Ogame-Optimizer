@@ -13,7 +13,7 @@ CrystalMine::CrystalMine(const Resources &defaultCost, const double costRatio,
 
 const Resources CrystalMine::getProductionPerHour() const
 {
-	return Resources(0, productionRatio * lvl * pow(1.1, lvl), 0, 0);
+	return Resources(0, productionRatio * lvl * cache_ratio[lvl], 0, 0);
 }
 
 

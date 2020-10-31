@@ -16,6 +16,6 @@ FusionPlant::FusionPlant(Resources default_cost,
 
 Resources FusionPlant::getProductionPerHour(int energetic_technology_lvl) const
 {
-    return Resources(0, 0, 10 * lvl * pow(1.1, lvl), m_production_ratio * lvl * pow(1.05 + energetic_technology_lvl * 0.01, lvl));
+    return Resources(0, 0, 10 * lvl * cache_ratio[lvl], m_production_ratio * lvl * pow(1.05 + energetic_technology_lvl * 0.01, lvl));
 }
 

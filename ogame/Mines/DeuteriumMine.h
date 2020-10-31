@@ -8,7 +8,7 @@
 
 #include "Mine.h"
 
-class DeuteriumMine : public Mine {
+class DeuteriumMine final : public Mine {
 	int m_planet_temperature;
 public:
     DeuteriumMine(int planet_temperature = 75,
@@ -19,6 +19,7 @@ public:
                   double productionRatio = 10,
                   double energyRatio = 20);
 
+    virtual ~DeuteriumMine() {}
     const Resources getProductionPerHour() const override;
 };
 

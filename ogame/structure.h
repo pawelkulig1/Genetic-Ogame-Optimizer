@@ -16,4 +16,9 @@ public:
     virtual void setLvl(int lvl);
     virtual double getConstructionTime(int robot_factory_level, int nanite_factory_level) const override;
 	virtual void operator++() override;
+
+    class pow_cache final
+    {
+         
+    };
 };

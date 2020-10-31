@@ -19,7 +19,7 @@ void Ship::operator++()
 
 double Ship::getConstructionTime(int shipyard_level, int nanite_factory_level) const
 {
-    return (3600 * (defaultCost.at(0) + defaultCost.at(1)) / (2500 * (shipyard_level + 1)) * pow(0.5, nanite_factory_level));
+    return (3600 * (defaultCost.at(0) + defaultCost.at(1)) / (2500 * (shipyard_level + 1)) * nanite_cache[nanite_factory_level]);
 }
 
 Resources Ship::getUpgradeCost() const

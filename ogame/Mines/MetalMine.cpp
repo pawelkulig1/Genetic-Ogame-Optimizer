@@ -21,5 +21,5 @@ MetalMine::MetalMine(const Resources &defaultCost,
 
 const Resources MetalMine::getProductionPerHour() const
 {
-	return Resources(productionRatio * lvl * pow(1.1, lvl), 0, 0, 0);
+	return Resources(productionRatio * lvl * cache_ratio[lvl], 0, 0, 0);
 }

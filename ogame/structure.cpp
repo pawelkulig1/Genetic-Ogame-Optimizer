@@ -42,5 +42,5 @@ void Structure::operator++() {
 
 double Structure::getConstructionTime(int robot_factory_level, int nanite_factory_level) const {
     Resources nlc = getUpgradeCost();
-    return (3600 * (nlc.at(0) + nlc.at(1)) / (2500 * (robot_factory_level+ 1)) * pow(0.5, nanite_factory_level));
+    return (3600 * (nlc.at(0) + nlc.at(1)) / (2500 * (robot_factory_level + 1)) * nanite_cache[nanite_factory_level]);
 }

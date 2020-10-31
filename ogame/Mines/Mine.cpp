@@ -6,7 +6,7 @@
 #include "Mine.h"
 
 Resources Mine::getEnergyConsumption() const {
-    return Resources(0, 0, 0, energyRatio * lvl * pow(1.1, lvl));
+    return Resources(0, 0, 0, energyRatio * lvl * cache_ratio[lvl]);
 }
 
 const Resources &Mine::getDefaultProductionPerHour() const {
